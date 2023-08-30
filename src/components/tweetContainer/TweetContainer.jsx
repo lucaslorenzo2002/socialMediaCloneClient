@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TweetInput from "../tweetInput/tweetInput";
 import Tweet from "../tweet/Tweet";
 
-const TweetContainer = ({ tweets = [] }) => {
+const TweetContainer = ({ tweets = [], isProfile = false }) => {
   const [likes, setLikes] = useState({});
 
   const toggleLike = (tweetId) => {
@@ -11,16 +11,22 @@ const TweetContainer = ({ tweets = [] }) => {
       [tweetId]: !likes[tweetId],
     });
   };
-
   if (tweets.length === 0)
     return (
       <div className="flex-1 px-2 text-center mb-10">
         <TweetInput />
-        <p className="mt-10 text-slate-400">
-          No hay tweets disponibles.
-          <br />
-          <span>Sigue a otros usuarios para ver sus twits.</span>
-        </p>
+
+        {isProfile ? (
+          <p className="mt-10 text-slate-400">
+            <span>Este usuario no tiene Tweets</span>
+          </p>
+        ) : (
+          <p className="mt-10 text-slate-400">
+            No hay tweets disponibles.
+            <br />
+            Sigue a otros usuarios para ver sus twits.
+          </p>
+        )}
       </div>
     );
 

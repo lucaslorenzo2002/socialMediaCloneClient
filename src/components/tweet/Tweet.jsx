@@ -19,8 +19,15 @@ const Tweet = ({
   profile = "/defaultProfileImg.png",
   isLiked,
   onToggleLike,
+  onNewComment,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [localCommentCount, setLocalCommentCount] = useState(comments.length);
+
+
+  const handleNewComment = (newComment) => {
+    setLocalCommentCount(localCommentCount + 1);
+  };
 
   const handleLike = () => {
     onToggleLike(tweetId);
@@ -62,7 +69,7 @@ const Tweet = ({
                 className="cursor-pointer hover:text-blue-500 max-w-[18px]"
                 onClick={openModal}
               />
-              <span>{comments.length}</span>
+              <span>{localCommentCount}</span>
             </div>
             <div className="flex gap-1">
               <RepeatIcon className="cursor-pointer hover:text-green-500 max-w-[18px]" />
@@ -96,6 +103,7 @@ const Tweet = ({
         tweetId={tweetId}
         isLiked={isLiked}
         onToggleLike={handleLike}
+        onNewComment={handleNewComment}
       />
     </>
   );

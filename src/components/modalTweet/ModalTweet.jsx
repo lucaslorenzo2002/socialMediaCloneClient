@@ -5,6 +5,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import CommentContainer from "../commentContainer/CommentContainer";
 
 const ModalTweet = ({
   isOpen,
@@ -16,8 +17,22 @@ const ModalTweet = ({
   tweetId,
   isLiked,
   onToggleLike,
+  onNewComment,
 }) => {
   if (!isOpen) return null;
+
+  const [localComments, setLocalComments] = useState([]);
+
+  useEffect(() => {
+    setLocalComments(comments);
+  }, [comments]);
+
+  const handleNewComment = (newComment) => {
+    setLocalComments((prevComments) => [...prevComments, newComment]);
+    if (onNewComment) {
+      onNewComment(newComment);
+    }
+  };
 
   const handleLike = () => {
     onToggleLike(tweetId);
@@ -27,7 +42,7 @@ const ModalTweet = ({
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-start pt-20 z-50">
       <div className="bg-white w-full md:w-1/2 xl:w-1/3 md:max-h-[70vh] rounded-lg overflow-y-auto shadow-lg">
         {/* Header del Modal */}
-        <div className="flex justify-between items-center border-b p-4">
+        <div className="flex justify-between items-center border-b p-4 sticky top-0 bg-white z-10">
           <span className="font-bold text-lg">Tweet</span>
           <button
             onClick={onClose}
@@ -41,7 +56,7 @@ const ModalTweet = ({
         <div className="p-4 border-b">
           <div className="flex space-x-3">
             <img
-              src={tweet.profile || "defaultProfileImg.png"}
+              src={tweet.profile || "/defaultProfileImg.png"}
               alt="User"
               className="w-10 h-10 rounded-full"
             />
@@ -61,7 +76,7 @@ const ModalTweet = ({
               className="cursor-pointer hover:text-blue-500 max-w-[18px]"
               onClick={() => {}}
             />
-            <span>{comments.length}</span>
+            <span>{localComments.length}</span>
           </div>
           <div className="flex gap-1">
             <RepeatIcon className="cursor-pointer hover:text-green-500 max-w-[18px]" />
@@ -85,27 +100,14 @@ const ModalTweet = ({
         </div>
 
         {/* Comentarios */}
-        {comments.map((comment, index) => (
-          <div key={index} className="p-4 border-b">
-            <div className="flex space-x-3">
-              <img
-                src={comment.profile || "defaultProfileImg.png"}
-                alt="User"
-                className="w-10 h-10 rounded-full"
-              />
-              <div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <span className="font-bold">{comment.User.full_name}</span>
-                  <span className="text-gray-500">{comment.User.username}</span>
-                </div>
-                <p>{comment.comment}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+        <CommentContainer comments={localComments} />
 
         {/* Reply Input */}
-        <TweetInput isComment={true} tweetId={tweetId} />
+        <TweetInput
+          isComment={true}
+          tweetId={tweetId}
+          onNewComment={handleNewComment}
+        />
       </div>
     </div>
   );

@@ -9,13 +9,15 @@ import axios from "axios";
 import CONFIG from "../../constants/config";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-const TweetInput = ({ isComment = false }) => {
+const TweetInput = ({ isComment = false, tweetId = null, onNewComment }) => {
   const [input, setInput] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [showEmojis, setShowEmojis] = useState(false);
 
   const token = useSelector((state) => state.token);
+  const user = useSelector((state) => state.user);
 
   const filePickerRef = useRef(null);
 
@@ -43,42 +45,76 @@ const TweetInput = ({ isComment = false }) => {
   };
 
   const handleTweet = () => {
-    const data = {
-      text: input,
-    };
-
-    axios
-      .post(`${CONFIG.BASE_URL}/crearpost`, data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((r) => {
-        if (r.data.success) {
-          toast.success("Tweet creado correctamente");
-        } else {
+    if (!isComment) {
+      const data = {
+        text: input,
+      };
+      axios
+        .post(`${CONFIG.BASE_URL}/crearpost`, data, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((r) => {
+          if (r.data.success) {
+            toast.success("Tweet creado correctamente");
+          } else {
+            toast.error("Error al crear el tweet");
+          }
+        })
+        .catch((e) => {
+          console.log(e);
           toast.error("Error al crear el tweet");
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-        toast.error("Error al crear el tweet");
-      });
+        });
+    } else {
+      const data = {
+        comment: input,
+      };
+      axios
+        .post(`${CONFIG.BASE_URL}/${tweetId}/crearcomentario`, data, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((r) => {
+          if (r.data.success) {
+            const newComment = {
+              User: {
+                full_name: user.full_name,
+                username: user.username,
+                profile_photo: user.profile_photo,
+                id: user.id,
+              },
+              comment: input,
+            };
+            toast.success("Respuesta creada correctamente");
+            onNewComment && onNewComment(newComment);
+          } else {
+            toast.error("Error al crear respuesta");
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          toast.error("Error al crear respuesta");
+        });
+    }
     setInput("");
     setShowEmojis(false);
     setSelectedFile(null);
   };
-
   return (
     <div className={`border-b border-slate-100 p-3 flex space-x-3 mt-1`}>
-      <img
-        src="/defaultProfileImg.png"
-        alt="Profile Pic"
-        className="h-11 w-11 rounded-full cursor-pointer"
-      />
+      <Link to={`/profile/${user.id}`} className="h-11 w-11">
+        <img
+          src={user.profile_photo || "/defaultProfileImg.png"}
+          alt="Profile Pic"
+          className="rounded-full"
+        />
+      </Link>
       <div className="w-full divide-y divide-slate-100">
-        <div className={``}>
+        <div>
           <textarea
             placeholder={isComment ? "Add a comment..." : "What's happening?"}
             value={input}
