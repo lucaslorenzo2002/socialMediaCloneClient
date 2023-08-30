@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .icon {
+        @apply w-9 h-9 text-slate-400 cursor-pointer hover:text-slate-800 duration-300;
+    }
+
+    em-emoji-picker {
+        @apply absolute w-screen left-0 sm:relative;
+    }
+}

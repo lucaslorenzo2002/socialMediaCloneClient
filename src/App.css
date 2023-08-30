@@ -1,0 +1,28 @@
+
+/* Estilos para la barra de desplazamiento */
+::-webkit-scrollbar {
+    width: 12px;
+    /* ancho de la scrollbar vertical */
+    height: 12px;
+    /* altura de la scrollbar horizontal */
+}
+
+::-webkit-scrollbar-track {
+    /* color de fondo de la barra */
+    background: #f7f7f7;
+    /* radio de las esquinas de la barra */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d1d1d1;
+    /* color del desplazador */
+    border-radius: 10px;
+    /* radio de las esquinas del desplazador */
+
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #9c9c9c;
+    /* color del desplazador al hacer hover */
+}

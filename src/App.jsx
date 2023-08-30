@@ -1,0 +1,97 @@
+import "./App.css";
+
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+  useNavigate,
+} from "react-router-dom";
+import { useEffect } from "react";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
+import { useSelector } from "react-redux";
+import { Toaster } from "react-hot-toast";
+import { useMediaQuery } from "react-responsive";
+
+import NavBar from "./components/navBar/NavBar";
+import Home from "./pages/home/Home";
+import Profile from "./pages/profile/Profile";
+import Explore from "./pages/explore/Explore";
+import Error from "./pages/error/Error";
+import Login from "./pages/login/Login";
+import RegisterPage from "./pages/register/RegisterPage";
+import Notifications from "./pages/notis/Notifications";
+import SidebarRight from "./components/sidebarRight/sidebarRight";
+import SidebarLeft from "./components/sidebarLeft/sidebarLeft";
+
+const Layout = () => {
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
+  const isDesktopOrLaptop = useMediaQuery({
+    query: "(min-device-width: 1224px)",
+  });
+
+  const isTabletOrLarger = useMediaQuery({
+    query: "(min-device-width: 768px)",
+  });
+
+  return (
+    <div className="mx-auto">
+      <NavBar />
+      {user && (
+        <div>
+          <div className="container mx-auto mt-16">
+            <div className="flex">
+              {isDesktopOrLaptop && (
+                <div className="w-1/4 px-2">
+                  <SidebarLeft />
+                </div>
+              )}
+              <div className="flex-1">
+                <Outlet />
+              </div>
+              {/* El componente de la ruta específica se renderizará aquí */}
+              {isTabletOrLarger && (
+                <div className="w-1/4 px-2">
+                  <SidebarRight />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <Provider store={store}>
+      <Toaster />
+
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/explore" element={<Explore />} />
+            <Route path="/notifications" element={<Notifications />} />
+          </Route>
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<RegisterPage />} />
+          <Route path="*" element={<Error />} />
+        </Routes>
+      </Router>
+    </Provider>
+  );
+}
+
+export default App;
