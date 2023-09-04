@@ -6,6 +6,10 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
 import ModalTweet from "../modalTweet/ModalTweet";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import CONFIG from "../../constants/config";
+import { useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
 
 const Tweet = ({
   tweetId,
@@ -13,24 +17,64 @@ const Tweet = ({
   content,
   user,
   userId,
-  likes = 0,
+  likes = [],
   retweets = [],
   comments = [],
   profile = "/defaultProfileImg.png",
   isLiked,
   onToggleLike,
-  onNewComment,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [localCommentCount, setLocalCommentCount] = useState(comments.length);
-
+  const [localLikesCount, setLocalLikesCount] = useState(likes.length);
 
   const handleNewComment = (newComment) => {
+    comments.push(newComment);
     setLocalCommentCount(localCommentCount + 1);
   };
 
+  const globalUser = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
+
   const handleLike = () => {
-    onToggleLike(tweetId);
+    if (!isLiked) {
+      axios
+        .post(`${CONFIG.BASE_URL}/likepost/${tweetId}`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          onToggleLike(tweetId);
+          setLocalLikesCount(localLikesCount + 1);
+        })
+        .catch((e) => {
+          console.log(e);
+          toast.error("Error al Likear Tweet");
+          return;
+        });
+    } else {
+      const likeId = likes.find((like) => like.user_id === globalUser.id)?.id;
+      if (likeId) {
+        axios
+          .post(`${CONFIG.BASE_URL}/removelike/${likeId}`,{}, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            setLocalLikesCount(localLikesCount - 1);
+            onToggleLike(tweetId);
+          })
+          .catch((e) => {
+            console.log(e);
+            toast.error("Error al quitar el like al tweet");
+            return;
+          });
+      } else {
+        toast.error("No se encontró el like para eliminar");
+      }
+    }
   };
 
   const openModal = () => {
@@ -40,7 +84,6 @@ const Tweet = ({
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
   return (
     <>
       <div className="flex p-4 space-x-4 border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200">
@@ -88,7 +131,7 @@ const Tweet = ({
                 />
               )}
 
-              <span>{isLiked ? likes + 1 : likes}</span>
+              <span>{localLikesCount}</span>
             </div>
           </div>
         </div>
@@ -96,11 +139,10 @@ const Tweet = ({
       <ModalTweet
         isOpen={isModalOpen}
         onClose={closeModal}
-        tweet={{ user, content, profile }}
+        tweet={{ user, content, profile, fullName, tweetId }}
         comments={comments}
         retweets={retweets}
         likes={likes}
-        tweetId={tweetId}
         isLiked={isLiked}
         onToggleLike={handleLike}
         onNewComment={handleNewComment}

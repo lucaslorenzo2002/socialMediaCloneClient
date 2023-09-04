@@ -75,7 +75,7 @@ const NavBar = () => {
           </div>
 
           {/* Center: Logo */}
-          <div className="lg:w-1/3 md:w-auto w-full flex flex-1 lg:justify-center">
+          <div className="md:w-1/3 w-full flex flex-1 md:justify-center">
             <img src="/twitter-logo.png" alt="Twitter Logo" width={"40px"} />
           </div>
 
@@ -84,7 +84,7 @@ const NavBar = () => {
             <SearchIcon className="absolute left-3 top-2 text-gray-500" />
             <input
               type="text"
-              placeholder="Search Twit"
+              placeholder="Buscar Usuarios"
               className="border rounded-full w-full lg:w-3/4 pl-10 pr-4 py-1 focus:outline-none focus:border-blue-500"
             />
           </div>

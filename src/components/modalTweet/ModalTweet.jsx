@@ -14,7 +14,6 @@ const ModalTweet = ({
   retweets,
   comments,
   likes,
-  tweetId,
   isLiked,
   onToggleLike,
   onNewComment,
@@ -35,7 +34,7 @@ const ModalTweet = ({
   };
 
   const handleLike = () => {
-    onToggleLike(tweetId);
+    onToggleLike(tweet.tweetId);
   };
 
   return (
@@ -62,8 +61,8 @@ const ModalTweet = ({
             />
             <div>
               <div className="flex items-center space-x-2 mb-2">
-                <span className="font-bold">{tweet.full_name}</span>
-                <span className="text-gray-500">{tweet.username}</span>
+                <span className="font-bold">{tweet.fullName}</span>
+                <span className="text-gray-500">{tweet.user}</span>
               </div>
               <p>{tweet.content}</p>
             </div>
@@ -95,7 +94,7 @@ const ModalTweet = ({
               />
             )}
 
-            <span>{isLiked ? likes + 1 : likes}</span>
+            <span>{likes.length}</span>
           </div>
         </div>
 
@@ -105,7 +104,7 @@ const ModalTweet = ({
         {/* Reply Input */}
         <TweetInput
           isComment={true}
-          tweetId={tweetId}
+          tweetId={tweet.tweetId}
           onNewComment={handleNewComment}
         />
       </div>

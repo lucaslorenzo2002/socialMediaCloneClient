@@ -1,9 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TweetInput from "../tweetInput/tweetInput";
 import Tweet from "../tweet/Tweet";
+import { useSelector } from "react-redux";
 
 const TweetContainer = ({ tweets = [], isProfile = false }) => {
   const [likes, setLikes] = useState({});
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const initialLikes = {};
+    tweets.forEach((tweet) => {
+      initialLikes[tweet.id] = tweet.Likes.some(
+        (like) => like.user_id === user.id
+      );
+    });
+    setLikes(initialLikes);
+  }, [tweets, user.id]);
 
   const toggleLike = (tweetId) => {
     setLikes({
@@ -11,6 +23,7 @@ const TweetContainer = ({ tweets = [], isProfile = false }) => {
       [tweetId]: !likes[tweetId],
     });
   };
+
   if (tweets.length === 0)
     return (
       <div className="flex-1 px-2 text-center mb-10">
@@ -42,10 +55,10 @@ const TweetContainer = ({ tweets = [], isProfile = false }) => {
           fullName={tweet.User.full_name}
           user={tweet.User.username}
           userId={tweet.user_id}
-          likes={tweet.Likes.length}
+          likes={tweet.Likes}
           comments={tweet.PostComments}
           isLiked={likes[tweet.id]}
-          onToggleLike={toggleLike}
+          onToggleLike={() => toggleLike(tweet.id)}
         />
       ))}
     </div>

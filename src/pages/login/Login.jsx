@@ -10,7 +10,6 @@ import { toast } from "react-hot-toast";
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const currentToken = useSelector((state) => state.token);
 
   const [formData, setFormData] = useState({
     username: "",
