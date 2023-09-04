@@ -26,21 +26,11 @@ const Profile = () => {
       })
       .then((response) => {
         let correctedData = { ...response.data.data };
-        console.log(response.data.data.FollowersList);
-        /*  {
-    id: 3,
-    user_id: 3,
-    Follower: [
-      {
-        id: 2,
-        full_name: 'lucas lorenzo',
-        username: '@lucas2',
-        profile_photo: null,
-        user_followers_list: { id: 93, user_id: 3, follower_list_id: 2 }
-      }
-    ]
-  } ;*/
-        //Si response.data.data.FollowersList contiene el id del usuario (user.id) setea el boton;
+        console.log(correctedData.FollowingList.Following);
+
+        correctedData.isFollowing = correctedData.FollowingList.Following.some(
+          (e) => e.id === user.id
+        );
 
         // Intercambio de Seguidores y Seguidos aquí
         correctedData.CorrectedFollowers =

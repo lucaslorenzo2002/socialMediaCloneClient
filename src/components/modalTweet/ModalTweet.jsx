@@ -35,6 +35,7 @@ const ModalTweet = ({
 
   const handleLike = () => {
     onToggleLike(tweet.tweetId);
+    isLiked ? console.log("likes.length-1") : console.log("likes.length");
   };
 
   return (
@@ -94,7 +95,7 @@ const ModalTweet = ({
               />
             )}
 
-            <span>{likes.length}</span>
+            <span>{likes}</span>
           </div>
         </div>
 
