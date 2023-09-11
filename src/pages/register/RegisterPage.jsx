@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import CONFIG from "../../constants/config";
 
-const baseUrl =
-  "https://social-media-clone-e37q-ltz9wtdic-lucaslorenzo2002.vercel.app/api";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +24,7 @@ const RegisterPage = () => {
     console.log(formData);
 
     try {
-      const response = await axios.post(`${baseUrl}/register`, formData);
+      const response = await axios.post(`${CONFIG.BASE_URL}/register`, formData);
       console.log(response.data);
     } catch (error) {
       console.error("Hubo un error al registrar:", error);

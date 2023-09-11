@@ -23,6 +23,7 @@ const Tweet = ({
   profile = "/defaultProfileImg.png",
   isLiked,
   onToggleLike,
+  isRetweet,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [localCommentCount, setLocalCommentCount] = useState(comments.length);
@@ -39,11 +40,15 @@ const Tweet = ({
   const handleLike = () => {
     if (!isLiked) {
       axios
-        .post(`${CONFIG.BASE_URL}/likepost/${tweetId}`, {}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .post(
+          `${CONFIG.BASE_URL}/likepost/${tweetId}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then((response) => {
           onToggleLike(tweetId);
           setLocalLikesCount(localLikesCount + 1);
@@ -57,11 +62,15 @@ const Tweet = ({
       const likeId = likes.find((like) => like.user_id === globalUser.id)?.id;
       if (likeId) {
         axios
-          .post(`${CONFIG.BASE_URL}/removelike/${likeId}`,{}, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
+          .post(
+            `${CONFIG.BASE_URL}/removelike/${likeId}`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
           .then((response) => {
             setLocalLikesCount(localLikesCount - 1);
             onToggleLike(tweetId);
@@ -84,6 +93,7 @@ const Tweet = ({
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   return (
     <>
       <div className="flex p-4 space-x-4 border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200">
@@ -95,15 +105,27 @@ const Tweet = ({
             className="aspect-square w-12 rounded-full object-cover"
           />
         </Link>
+
         {/* Contenido principal del tweet */}
         <div className="flex-1">
-          <Link
-            to={`/profile/${userId}`}
-            className="flex items-center space-x-2 mb-2"
-          >
-            <div className="font-bold">{fullName}</div>
-            <div className="text-slate-400">{user}</div>
-          </Link>
+          <div className="flex">
+            <Link
+              to={`/profile/${userId}`}
+              className="flex items-center space-x-2 mb-2"
+            >
+              <div className="font-bold">{fullName}</div>
+              <div className="text-slate-400">{user}</div>
+            </Link>
+            {isRetweet && (
+              <div className="flex-1 text-end text-sm text-slate-400">
+                <RepeatIcon className="max-w-[18px]"/>
+                <span className="italic ml-1">
+                  Retweeted
+                </span>
+              </div>
+            )}
+          </div>
+
           <p>{content}</p>
           {/* Iconos de interacción */}
           <div className="flex gap-x-4 mt-2 text-slate-400">

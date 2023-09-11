@@ -26,13 +26,12 @@ const Profile = () => {
       })
       .then((response) => {
         let correctedData = { ...response.data.data };
-        console.log(correctedData.FollowingList.Following);
 
         correctedData.isFollowing = correctedData.FollowingList.Following.some(
           (e) => e.id === user.id
         );
 
-        // Intercambio de Seguidores y Seguidos aquí
+        // Intercambio de Seguidores y Seguidos
         correctedData.CorrectedFollowers =
           correctedData.FollowingList?.Following || [];
         correctedData.CorrectedFollowing =
@@ -53,7 +52,6 @@ const Profile = () => {
       </div>
     );
   }
-
   const mergeAndSortByDate = (array1, array2) => {
     // Unir los dos arrays
     const combinedArray = [...array1, ...array2];
@@ -62,13 +60,11 @@ const Profile = () => {
     const sortedArray = combinedArray.sort((a, b) => {
       const dateA = new Date(a.created_at);
       const dateB = new Date(b.created_at);
-      return dateA - dateB; // Para ordenar de más antiguo a más reciente
-      // return dateB - dateA; // Para ordenar de más reciente a más antiguo
+      return dateA - dateB;
     });
 
     return sortedArray.reverse();
   };
-
   const handleClickFollow = (newIsFollowing) => {
     newIsFollowing ? setFollowers(followers + 1) : setFollowers(followers - 1);
   };
@@ -106,7 +102,6 @@ const Profile = () => {
       <div className="mt-8 w-full">
         <TweetContainer
           tweets={mergeAndSortByDate(profileData.Posts, profileData.Retweets)}
-          isProfile={true}
           onClick={handleClickFollow}
         />
       </div>
