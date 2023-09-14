@@ -6,25 +6,34 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import CommentContainer from "../commentContainer/CommentContainer";
+import { useSelector } from "react-redux";
 
 const ModalTweet = ({
   isOpen,
   onClose,
   tweet,
-  retweets,
   comments,
   likes,
   isLiked,
   onToggleLike,
   onNewComment,
+  retweets,
+  onToggleRetweet,
+  isRetweeted,
 }) => {
   if (!isOpen) return null;
+  const [localRetweets, setLocalRetweets] = useState(retweets.length);
 
+  const globalUser = useSelector((state) => state.user);
   const [localComments, setLocalComments] = useState([]);
 
   useEffect(() => {
     setLocalComments(comments);
   }, [comments]);
+
+  useEffect(() => {
+    setLocalRetweets(retweets);
+  }, [retweets]);
 
   const handleNewComment = (newComment) => {
     setLocalComments((prevComments) => [...prevComments, newComment]);
@@ -35,9 +44,11 @@ const ModalTweet = ({
 
   const handleLike = () => {
     onToggleLike(tweet.tweetId);
-    isLiked ? console.log("likes.length-1") : console.log("likes.length");
   };
 
+  const handleRetweet = () => {
+    onToggleRetweet(tweet.tweetId);
+  };
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-start pt-20 z-50">
       <div className="bg-white w-full md:w-1/2 xl:w-1/3 md:max-h-[70vh] rounded-lg overflow-y-auto shadow-lg">
@@ -79,8 +90,13 @@ const ModalTweet = ({
             <span>{localComments.length}</span>
           </div>
           <div className="flex gap-1">
-            <RepeatIcon className="cursor-pointer hover:text-green-500 max-w-[18px]" />
-            <span>{retweets.length}</span>
+            <RepeatIcon
+              className={`cursor-pointer hover:text-green-500 max-w-[18px] ${
+                isRetweeted ? "text-green-500" : ""
+              }`}
+              onClick={handleRetweet}
+            />
+            <span>{localRetweets}</span>
           </div>
           <div className="flex gap-1">
             {isLiked ? (

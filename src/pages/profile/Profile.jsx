@@ -52,19 +52,26 @@ const Profile = () => {
       </div>
     );
   }
+
   const mergeAndSortByDate = (array1, array2) => {
     // Unir los dos arrays
-    const combinedArray = [...array1, ...array2];
+    const combinedArray = array1
+      .filter(
+        // Filtramos los tweets que el usuario no haya retuiteado
+        (post) => !array2.some((retweet) => retweet.id === post.id)
+      )
+      .concat(array2);
 
     // Ordenar por la fecha de creación
     const sortedArray = combinedArray.sort((a, b) => {
-      const dateA = new Date(a.created_at);
-      const dateB = new Date(b.created_at);
+      const dateA = new Date(a.created_at || a.retweeted_at);
+      const dateB = new Date(b.retweeted_at || b.created_at); // Usamos 'retweeted_at' si está presente, de lo contrario, 'created_at'
       return dateA - dateB;
     });
 
     return sortedArray.reverse();
   };
+
   const handleClickFollow = (newIsFollowing) => {
     newIsFollowing ? setFollowers(followers + 1) : setFollowers(followers - 1);
   };
@@ -103,6 +110,7 @@ const Profile = () => {
         <TweetContainer
           tweets={mergeAndSortByDate(profileData.Posts, profileData.Retweets)}
           onClick={handleClickFollow}
+          isUserProfile={profileData?.id === user.id}
         />
       </div>
     </div>

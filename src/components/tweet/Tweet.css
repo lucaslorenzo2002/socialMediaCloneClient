@@ -1,0 +1,10 @@
+.vanish {
+    animation: vanish 0.5s forwards;
+}
+
+@keyframes vanish {
+    to {
+        opacity: 0;
+        display: none;
+    }
+}

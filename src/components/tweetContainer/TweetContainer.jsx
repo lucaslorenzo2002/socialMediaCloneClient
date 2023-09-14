@@ -4,12 +4,14 @@ import Tweet from "../tweet/Tweet";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
-const TweetContainer = ({ tweets = [] }) => {
+const TweetContainer = ({ tweets = [], isUserProfile }) => {
   const [likes, setLikes] = useState({});
+  const [retweets, setRetweets] = useState([]);
   const [isProfile, setIsProfile] = useState(false);
 
   const user = useSelector((state) => state.user);
   const location = useLocation();
+
 
   useEffect(() => {
     if (location.pathname.includes("/profile/")) {
@@ -22,7 +24,7 @@ const TweetContainer = ({ tweets = [] }) => {
   useEffect(() => {
     const initialLikes = {};
     tweets.forEach((tweet) => {
-      const currentTweet = tweet.Post || tweet; // Considers retweet case
+      const currentTweet = tweet.Post || tweet; // Considera el caso del rt
       initialLikes[currentTweet.id] = currentTweet.Likes.some(
         (like) => like.user_id === user.id
       );
@@ -36,6 +38,33 @@ const TweetContainer = ({ tweets = [] }) => {
       [tweetId]: !likes[tweetId],
     });
   };
+
+ useEffect(() => {
+    const initialRetweets = {};
+    tweets.forEach((tweet) => {
+      const currentTweet = tweet.Post || tweet;
+      initialRetweets[currentTweet.id] = currentTweet.Retweets?.some(
+        (retweet) => retweet.user_id === user.id
+      );
+    });
+    setRetweets(initialRetweets);
+  }, [tweets, user.id]);
+
+  const filterUniqueRetweets = (tweets) => {
+    const seen = new Set();
+    return tweets.filter((tweet) => {
+      const currentTweet = tweet.Post || tweet; // Considera el caso del retweet
+      if (tweet.Post) { // Si es un retweet
+        if (seen.has(currentTweet.id)) {
+          return false; // Si el tweet original ya ha sido retuiteado, lo ignoro
+        }
+        seen.add(currentTweet.id);
+      }
+      return true;
+    });
+  };
+
+  const uniqueTweets = filterUniqueRetweets(tweets);
 
   if (tweets.length === 0)
     return (
@@ -53,19 +82,18 @@ const TweetContainer = ({ tweets = [] }) => {
       </div>
     );
 
-
   return (
     <div className="flex-1 px-2 mb-10">
       {!isProfile && <TweetInput />}
-      {tweets.map((tweet) => {
+      {uniqueTweets.map((tweet) => {
         const isRetweet = Boolean(tweet.Post);
         const currentTweet = isRetweet ? tweet.Post : tweet;
-        console.log(currentTweet);
-
         return (
           <Tweet
+            retweetUser={isRetweet ? tweet.User?.username : null}
+            retweetUserId={isRetweet ? tweet.User?.id : null}
             tweetId={currentTweet.id}
-            key={currentTweet.id}
+            key={currentTweet.id + "user" + currentTweet.User.id}
             content={currentTweet.text}
             profile={"/defaultProfileImg.png"}
             fullName={currentTweet.User.full_name}
@@ -76,6 +104,8 @@ const TweetContainer = ({ tweets = [] }) => {
             isLiked={likes[currentTweet.id]}
             onToggleLike={() => toggleLike(currentTweet.id)}
             isRetweet={isRetweet}
+            retweets={currentTweet.Retweets}
+            isUserProfile={isUserProfile && !isRetweet}
           />
         );
       })}
