@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import TweetInput from "../tweetInput/tweetInput";
+import TweetInput from "../tweetInput/TweetInput";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
