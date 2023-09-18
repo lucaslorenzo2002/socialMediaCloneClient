@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import CONFIG from "../../constants/config";
 
-
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -21,10 +20,12 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
 
     try {
-      const response = await axios.post(`${CONFIG.BASE_URL}/register`, formData);
+      const response = await axios.post(
+        `${CONFIG.BASE_URL}/register`,
+        formData
+      );
       console.log(response.data);
     } catch (error) {
       console.error("Hubo un error al registrar:", error);

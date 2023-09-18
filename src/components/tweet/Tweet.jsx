@@ -5,6 +5,9 @@ import RepeatIcon from "@mui/icons-material/Repeat";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import BsFillTrashFill from "@mui/icons-material/Delete";
 
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+
 import ModalTweet from "../modalTweet/ModalTweet";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -13,7 +16,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
 
-import "./Tweet.css"
+import "./Tweet.css";
 
 const Tweet = ({
   retweetUser,
@@ -39,6 +42,7 @@ const Tweet = ({
   const token = useSelector((state) => state.token);
   const [isRetweetedState, setIsRetweetedState] = useState(false);
 
+  const [isSaved, setIsSaved] = useState(false);
   const [localRetweetCount, setLocalRetweetCount] = useState(retweets.length);
 
   function isUserARetweeter(data) {
@@ -62,7 +66,8 @@ const Tweet = ({
   }, [retweets]);
 
   const handleRetweet = () => {
-    if(globalUser.id === userId) return toast.error("No puedes retuitear tus propios tweets");
+    if (globalUser.id === userId)
+      return toast.error("No puedes retuitear tus propios tweets");
     axios
       .post(
         `${CONFIG.BASE_URL}/retuitear/${tweetId}`,
@@ -156,6 +161,10 @@ const Tweet = ({
     }
   };
 
+  const handleSave = () => {
+    setIsSaved(!isSaved);
+  }
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -167,8 +176,6 @@ const Tweet = ({
   const refTuit = useRef(null);
 
   const handleDeleteTweet = async (tweetId) => {
-
-
     // Pregunta al usuario si está seguro de eliminar el tweet con SweetAlert2
     Swal.fire({
       title: "¿Estás seguro?",
@@ -192,7 +199,8 @@ const Tweet = ({
             }
           );
           toast.success("Tweet eliminado con éxito");
-          refTuit.current.classList.value = "vanish flex p-4 space-x-4 border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200";
+          refTuit.current.classList.value =
+            "vanish flex p-4 space-x-4 border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200";
         } catch (error) {
           toast.error("Error al eliminar el tweet");
           console.log(error);
@@ -274,6 +282,19 @@ const Tweet = ({
 
               <span>{localLikesCount}</span>
             </div>
+            <div className="flex gap-1">
+              {isSaved ? (
+                <BookmarkBorderIcon
+                  className="cursor-pointer  max-w-[18px] hover:text-black"
+                  onClick={(e) => handleSave()}
+                />
+              ) : (
+                <BookmarkIcon
+                  className="cursor-pointer  max-w-[18px] hover:text-black"
+                  onClick={(e) => handleSave()}
+                />
+              )}
+            </div>
             {isUserProfile && (
               <div className="flex flex-1 justify-end">
                 <BsFillTrashFill
@@ -297,6 +318,7 @@ const Tweet = ({
         onToggleRetweet={handleRetweet}
         retweets={localRetweetCount}
         isRetweeted={isRetweetedState}
+        onToggleSave={handleSave}
       />
     </>
   );

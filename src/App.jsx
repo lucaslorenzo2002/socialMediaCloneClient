@@ -19,6 +19,7 @@ import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import Explore from "./pages/explore/Explore";
 import Error from "./pages/error/Error";
+import Saved from "./pages/saved/Saved";
 import Login from "./pages/login/Login";
 import RegisterPage from "./pages/register/RegisterPage";
 import Notifications from "./pages/notis/Notifications";
@@ -85,6 +86,7 @@ function App() {
               <Route path="/profile/:id" element={<Profile />} />
               <Route path="/explore" element={<Explore />} />
               <Route path="/notifications" element={<Notifications />} />
+              <Route path="/saved" element={<Saved />} />
             </Route>
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<RegisterPage />} />

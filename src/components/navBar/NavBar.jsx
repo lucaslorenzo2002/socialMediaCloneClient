@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import axios from "axios";
@@ -18,6 +18,12 @@ import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 
 const NavBar = () => {
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!isMenuOpen);
+  };
+
   const dispatch = useDispatch();
 
   const isDesktopOrLaptop = useMediaQuery({
@@ -75,7 +81,6 @@ const NavBar = () => {
             {user ? (
               <Link to={`/profile/${user.id}`}>
                 <PersonOutlineIcon className="cursor-pointer hover:text-blue-500" />{" "}
-                Profile
               </Link>
             ) : (
               <Link to="/login">Login</Link>
@@ -130,9 +135,25 @@ const NavBar = () => {
             <PersonOutlineIcon className="cursor-pointer hover:text-blue-500" />
           </Link>
 
-          <Link to="/">
-            <MoreHorizIcon className="cursor-pointer hover:text-blue-500" />
-          </Link>
+          <div className="relative">
+            <MoreHorizIcon
+              className="cursor-pointer hover:text-blue-500"
+              onClick={toggleMenu}
+            />
+            {isMenuOpen && (
+              <div className="absolute right-0 bottom-[calc(100%+0.5rem)] bg-white border border-gray-300 rounded-md p-2 mt-2">
+                <Link to="/login" className="block mb-2 text-red-500 text-xl">
+                  Log out
+                </Link>
+                <Link to="/saved" className="block mb-2 hover:text-blue-500 text-xl">
+                  Guardados
+                </Link>
+                <Link to="/settings" className="block hover:text-blue-500 text-xl">
+                  Configuración
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </header>

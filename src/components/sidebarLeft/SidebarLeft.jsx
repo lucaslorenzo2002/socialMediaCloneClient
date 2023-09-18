@@ -49,7 +49,7 @@ const SidebarLeft = () => {
           Guardados
         </Link>
         <Link
-          to="/configuration"
+          to="/settings"
           className="cursor-pointer hover:bg-gray-100 p-2 rounded-lg"
         >
           Configuración

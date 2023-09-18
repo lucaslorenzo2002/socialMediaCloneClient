@@ -12,7 +12,7 @@ const TwitterNotification = ({ readed, title, text }) => {
     case "Te han dado like!":
       icon = <ThumbUpIcon className="text-blue-500 mr-2" />;
       break;
-    case "Nuevo comentario!":
+    case "Alguien te dió retweet!":
       icon = <ReplyIcon className="text-blue-500 mr-2" />;
       break;
     case "Mention":

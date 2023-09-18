@@ -21,7 +21,7 @@ const Notificatons = () => {
   const token = useSelector((state) => state.token);
 
   const [activeTab, setActiveTab] = useState("Todas");
-  const tabs = ["Todas", "Respuestas", "Menciones", "Likes"];
+  const tabs = ["Todas", "Retweets", "Menciones", "Likes"];
   const [lineStyles, setLineStyles] = useState({});
   const buttonsRef = useRef([]);
 

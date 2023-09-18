@@ -52,6 +52,7 @@ const Home = () => {
         setTweets(combinedData);
       } catch (error) {
         console.error("Error fetching data", error);
+        location.pathname = "/login";
       }
     };
 

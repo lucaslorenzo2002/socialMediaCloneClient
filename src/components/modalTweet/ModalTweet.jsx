@@ -6,6 +6,9 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import CommentContainer from "../commentContainer/CommentContainer";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+
 import { useSelector } from "react-redux";
 
 const ModalTweet = ({
@@ -20,12 +23,15 @@ const ModalTweet = ({
   retweets,
   onToggleRetweet,
   isRetweeted,
+  onToggleSave,
 }) => {
   if (!isOpen) return null;
   const [localRetweets, setLocalRetweets] = useState(retweets.length);
 
   const globalUser = useSelector((state) => state.user);
   const [localComments, setLocalComments] = useState([]);
+
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     setLocalComments(comments);
@@ -49,6 +55,11 @@ const ModalTweet = ({
   const handleRetweet = () => {
     onToggleRetweet(tweet.tweetId);
   };
+
+  const handleSave = () => {
+    setIsSaved(!isSaved);
+    onToggleSave();
+  }
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-start pt-20 z-50">
       <div className="bg-white w-full md:w-1/2 xl:w-1/3 md:max-h-[70vh] rounded-lg overflow-y-auto shadow-lg">
@@ -110,8 +121,22 @@ const ModalTweet = ({
                 onClick={(e) => handleLike()}
               />
             )}
-
             <span>{likes}</span>
+          </div>
+          <div>
+            <div className="flex gap-1">
+              {isSaved ? (
+                <BookmarkBorderIcon
+                  className="cursor-pointer  max-w-[18px] hover:text-black"
+                  onClick={(e) => handleSave()}
+                />
+              ) : (
+                <BookmarkIcon
+                  className="cursor-pointer  max-w-[18px] hover:text-black"
+                  onClick={(e) => handleSave()}
+                />
+              )}
+            </div>
           </div>
         </div>
 
