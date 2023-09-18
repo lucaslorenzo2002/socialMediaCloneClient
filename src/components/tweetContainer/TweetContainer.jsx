@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import TweetInput from "../tweetInput/tweetInput";
+import TweetInput from "../tweetInput/TweetInput";
 import Tweet from "../tweet/Tweet";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
