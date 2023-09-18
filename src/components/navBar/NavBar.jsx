@@ -30,7 +30,6 @@ const NavBar = () => {
 
   const user = useSelector((state) => state.user);
 
-
   useEffect(() => {
     // Si no hay notificaciones y no están en proceso de cargarse, entonces las busca
     if (reduxNotifications.length === 0 && !loading) {
@@ -54,7 +53,11 @@ const NavBar = () => {
       <div className="container mx-auto">
         <div className="flex justify-between items-center w-full">
           {/* Left: Icons */}
-          <div className={`${isDesktopOrLaptop ? "flex" : "hidden"} space-x-6 lg:w-1/3 md:w-auto w-full`}>
+          <div
+            className={`${
+              isDesktopOrLaptop ? "flex" : "hidden"
+            } space-x-6 lg:w-1/3 md:w-auto w-full`}
+          >
             <Link to="/">
               <HomeIcon className="cursor-pointer hover:text-blue-500" />
             </Link>
@@ -69,9 +72,14 @@ const NavBar = () => {
             <Link to="/">
               <MailOutlineIcon className="cursor-pointer hover:text-blue-500" />
             </Link>
-            <Link to={`/profile/${user.id}`}>
-              <PersonOutlineIcon className="cursor-pointer hover:text-blue-500" />
-            </Link>
+            {user ? (
+              <Link to={`/profile/${user.id}`}>
+                <PersonOutlineIcon className="cursor-pointer hover:text-blue-500" />{" "}
+                Profile
+              </Link>
+            ) : (
+              <Link to="/login">Login</Link>
+            )}
           </div>
 
           {/* Center: Logo */}
