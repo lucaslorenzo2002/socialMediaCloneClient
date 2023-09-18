@@ -9,7 +9,7 @@ import {
   fetchStart,
   fetchSuccess,
 } from "../../redux/notificationsSlice";
-import NotificationContainer from "../../components/notificationContainer/notificationContainer";
+import NotificationContainer from "../../components/notificationContainer/NotificationContainer";
 
 const Notificatons = () => {
   const dispatch = useDispatch();
