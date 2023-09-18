@@ -22,8 +22,8 @@ import Error from "./pages/error/Error";
 import Login from "./pages/login/Login";
 import RegisterPage from "./pages/register/RegisterPage";
 import Notifications from "./pages/notis/Notifications";
-import SidebarRight from "./components/sidebarRight/sidebarRight";
-import SidebarLeft from "./components/sidebarLeft/sidebarLeft";
+import SidebarRight from "./components/sidebarRight/SidebarRight";
+import SidebarLeft from "./components/sidebarLeft/SidebarLeft";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -74,23 +74,25 @@ const Layout = () => {
 
 function App() {
   return (
-    <Provider store={store}>
-      <Toaster />
+    <div className="overflow-x-hidden">
+      <Provider store={store}>
+        <Toaster />
 
-      <Router>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="/profile/:id" element={<Profile />} />
-            <Route path="/explore" element={<Explore />} />
-            <Route path="/notifications" element={<Notifications />} />
-          </Route>
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<RegisterPage />} />
-          <Route path="*" element={<Error />} />
-        </Routes>
-      </Router>
-    </Provider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="/profile/:id" element={<Profile />} />
+              <Route path="/explore" element={<Explore />} />
+              <Route path="/notifications" element={<Notifications />} />
+            </Route>
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<RegisterPage />} />
+            <Route path="*" element={<Error />} />
+          </Routes>
+        </Router>
+      </Provider>
+    </div>
   );
 }
 

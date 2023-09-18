@@ -120,6 +120,7 @@ const ModalTweet = ({
 
         {/* Reply Input */}
         <TweetInput
+          isModal={true}
           isComment={true}
           tweetId={tweet.tweetId}
           onNewComment={handleNewComment}

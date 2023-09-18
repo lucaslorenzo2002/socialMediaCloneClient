@@ -11,7 +11,12 @@ import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const TweetInput = ({ isComment = false, tweetId = null, onNewComment }) => {
+const TweetInput = ({
+  isComment = false,
+  tweetId = null,
+  onNewComment,
+  isModal = false,
+}) => {
   const [input, setInput] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [showEmojis, setShowEmojis] = useState(false);
@@ -160,15 +165,16 @@ const TweetInput = ({ isComment = false, tweetId = null, onNewComment }) => {
                 />
               </div>
             )}
-
-            <div className="icon" onClick={() => setShowEmojis(!showEmojis)}>
-              <EmojiEmotionsIcon className="h-4" />
-              {showEmojis && (
-                <div onClick={handleEmojiPickerClick}>
-                  <Picker data={data} onEmojiSelect={addEmoji} />
-                </div>
-              )}
-            </div>
+            {!isModal && (
+              <div className="icon" onClick={() => setShowEmojis(!showEmojis)}>
+                <EmojiEmotionsIcon className="h-4" />
+                {showEmojis && (
+                  <div onClick={handleEmojiPickerClick}>
+                    <Picker data={data} onEmojiSelect={addEmoji} />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <button
             onClick={handleTweet}
