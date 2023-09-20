@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
+
+
 import axios from "axios";
 import {
   fetchStart,
@@ -15,10 +17,21 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import CONFIG from "../../constants/config";
 
 const NavBar = () => {
+  const location = useLocation();
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isMessagePage, setIsMessagePage] = useState(false);
+
+  useEffect(() => {
+    if (location.pathname === "/messages") {
+      setIsMessagePage(true);
+    } else {
+      setIsMessagePage(false);
+    }
+  }, [location.pathname]);
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
@@ -36,7 +49,7 @@ const NavBar = () => {
 
   const user = useSelector((state) => state.user);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     // Si no hay notificaciones y no están en proceso de cargarse, entonces las busca
     if (reduxNotifications.length === 0 && !loading) {
       dispatch(fetchStart()); // Indica que empezará la petición
@@ -50,7 +63,7 @@ const NavBar = () => {
           dispatch(fetchError("Error fetching notifications"));
         });
     }
-  }, [reduxNotifications, loading, dispatch]);
+  }, [reduxNotifications, loading, dispatch]); */
 
   const unreaded = reduxNotifications.filter((item) => !item.readed).length;
 
@@ -75,7 +88,7 @@ const NavBar = () => {
                 </span>
               )}
             </Link>
-            <Link to="/">
+            <Link to="/messages">
               <MailOutlineIcon className="cursor-pointer hover:text-blue-500" />
             </Link>
             {user ? (
@@ -88,7 +101,7 @@ const NavBar = () => {
           </div>
 
           {/* Center: Logo */}
-          <div className="md:w-1/3 w-full flex flex-1 md:justify-center">
+          <div className={`md:w-1/3 w-full flex flex-1 md:justify-center ${isMessagePage && "hidden"}`}>
             <img src="/twitter-logo.png" alt="Twitter Logo" width={"40px"} />
           </div>
 
@@ -98,12 +111,14 @@ const NavBar = () => {
             <input
               type="text"
               placeholder="Buscar Usuarios"
-              className="border rounded-full w-full lg:w-3/4 pl-10 pr-4 py-1 focus:outline-none focus:border-blue-500"
+              className={`${
+                isMessagePage && !isDesktopOrLaptop && "hidden"
+              } border rounded-full w-full lg:w-3/4 pl-10 pr-4 py-1 focus:outline-none focus:border-blue-500`}
             />
           </div>
           <div
             className={`${
-              isDesktopOrLaptop ? "hidden" : "fixed bottom-16 right-5"
+              (isDesktopOrLaptop || isMessagePage) ? "hidden" : "fixed bottom-16 right-5"
             }`}
           >
             <AddIcon
@@ -116,7 +131,11 @@ const NavBar = () => {
 
       {/* Mobile Bottom Navbar */}
       {!isDesktopOrLaptop && (
-        <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center p-2">
+        <div
+          className={`fixed ${
+            isMessagePage ? "top-0" : "bottom-0"
+          } left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center p-2`}
+        >
           <Link to="/">
             <HomeIcon className="cursor-pointer hover:text-blue-500" />
           </Link>
@@ -128,7 +147,7 @@ const NavBar = () => {
               </span>
             )}
           </Link>
-          <Link to="/">
+          <Link to="/messages">
             <MailOutlineIcon className="cursor-pointer hover:text-blue-500" />
           </Link>
           <Link to={`/profile/${user.id}`}>
@@ -141,14 +160,24 @@ const NavBar = () => {
               onClick={toggleMenu}
             />
             {isMenuOpen && (
-              <div className="absolute right-0 bottom-[calc(100%+0.5rem)] bg-white border border-gray-300 rounded-md p-2 mt-2">
+              <div
+                className={`absolute right-0 ${
+                  isMessagePage ? "top" : "bottom"
+                }-[calc(100%+0.5rem)] bg-white border border-gray-300 rounded-md p-2 mt-2`}
+              >
                 <Link to="/login" className="block mb-2 text-red-500 text-xl">
                   Log out
                 </Link>
-                <Link to="/saved" className="block mb-2 hover:text-blue-500 text-xl">
+                <Link
+                  to="/saved"
+                  className="block mb-2 hover:text-blue-500 text-xl"
+                >
                   Guardados
                 </Link>
-                <Link to="/settings" className="block hover:text-blue-500 text-xl">
+                <Link
+                  to="/settings"
+                  className="block hover:text-blue-500 text-xl"
+                >
                   Configuración
                 </Link>
               </div>

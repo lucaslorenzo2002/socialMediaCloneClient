@@ -67,8 +67,8 @@ const Notificatons = () => {
     }
   }, [activeTab, tabs.length]);
 
-  const filterNotificationsByTitle = (notifications, title) => {
-    return notifications.filter((noti) => noti.title === title);
+  const filterNotificationsByType = (notifications, type) => {
+    return notifications.filter((noti) => noti.notification_type === type);
   };
 
   return (
@@ -104,22 +104,22 @@ const Notificatons = () => {
       )}
       {activeTab === "Respuestas" && (
         <NotificationContainer
-          notis={filterNotificationsByTitle(notifications, "Nuevo comentario!")}
+          notis={filterNotificationsByType(notifications, "Nuevo comentario!")}
           altText="No hay respuestas disponibles."
         />
       )}
       {activeTab === "Menciones" && (
         <NotificationContainer
-          notis={filterNotificationsByTitle(
+          notis={filterNotificationsByType(
             notifications,
-            "Te han mencionado!"
+            "mention"
           )}
           altText="No hay menciones disponibles."
         />
       )}
       {activeTab === "Likes" && (
         <NotificationContainer
-          notis={filterNotificationsByTitle(notifications, "Te han dado like!")}
+          notis={filterNotificationsByType(notifications, "Te han dado like!")}
           altText="No hay likes disponibles."
         />
       )}

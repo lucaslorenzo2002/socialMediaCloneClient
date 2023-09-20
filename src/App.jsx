@@ -25,6 +25,7 @@ import RegisterPage from "./pages/register/RegisterPage";
 import Notifications from "./pages/notis/Notifications";
 import SidebarRight from "./components/sidebarRight/SidebarRight";
 import SidebarLeft from "./components/sidebarLeft/SidebarLeft";
+import Messages from "./pages/messages/Messages";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -88,6 +89,7 @@ function App() {
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/saved" element={<Saved />} />
             </Route>
+            <Route path="/messages" element={<Messages />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<RegisterPage />} />
             <Route path="*" element={<Error />} />

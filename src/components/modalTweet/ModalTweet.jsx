@@ -24,6 +24,7 @@ const ModalTweet = ({
   onToggleRetweet,
   isRetweeted,
   onToggleSave,
+  isSavedParam,
 }) => {
   if (!isOpen) return null;
   const [localRetweets, setLocalRetweets] = useState(retweets.length);
@@ -31,7 +32,7 @@ const ModalTweet = ({
   const globalUser = useSelector((state) => state.user);
   const [localComments, setLocalComments] = useState([]);
 
-  const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(isSavedParam);
 
   useEffect(() => {
     setLocalComments(comments);
@@ -59,7 +60,7 @@ const ModalTweet = ({
   const handleSave = () => {
     setIsSaved(!isSaved);
     onToggleSave();
-  }
+  };
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-start pt-20 z-50">
       <div className="bg-white w-full md:w-1/2 xl:w-1/3 md:max-h-[70vh] rounded-lg overflow-y-auto shadow-lg">
@@ -126,12 +127,12 @@ const ModalTweet = ({
           <div>
             <div className="flex gap-1">
               {isSaved ? (
-                <BookmarkBorderIcon
+                <BookmarkIcon
                   className="cursor-pointer  max-w-[18px] hover:text-black"
                   onClick={(e) => handleSave()}
                 />
               ) : (
-                <BookmarkIcon
+                <BookmarkBorderIcon
                   className="cursor-pointer  max-w-[18px] hover:text-black"
                   onClick={(e) => handleSave()}
                 />

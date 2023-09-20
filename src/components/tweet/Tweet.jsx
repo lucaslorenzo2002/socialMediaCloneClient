@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import "./Tweet.css";
 
 const Tweet = ({
+  isSavedParam = false,
   retweetUser,
   retweetUserId,
   tweetId,
@@ -42,7 +43,7 @@ const Tweet = ({
   const token = useSelector((state) => state.token);
   const [isRetweetedState, setIsRetweetedState] = useState(false);
 
-  const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(isSavedParam);
   const [localRetweetCount, setLocalRetweetCount] = useState(retweets.length);
 
   function isUserARetweeter(data) {
@@ -116,7 +117,7 @@ const Tweet = ({
     if (!isLiked) {
       axios
         .post(
-          `${CONFIG.BASE_URL}/likepost/${tweetId}`,
+          `${CONFIG.BASE_URL}/like/Tweet/${tweetId}`,
           {},
           {
             headers: {
@@ -283,7 +284,7 @@ const Tweet = ({
               <span>{localLikesCount}</span>
             </div>
             <div className="flex gap-1">
-              {isSaved ? (
+              {!isSaved ? (
                 <BookmarkBorderIcon
                   className="cursor-pointer  max-w-[18px] hover:text-black"
                   onClick={(e) => handleSave()}
@@ -319,6 +320,7 @@ const Tweet = ({
         retweets={localRetweetCount}
         isRetweeted={isRetweetedState}
         onToggleSave={handleSave}
+        isSavedParam={isSaved}
       />
     </>
   );

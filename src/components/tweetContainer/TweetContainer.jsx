@@ -12,7 +12,6 @@ const TweetContainer = ({ tweets = [], isUserProfile }) => {
   const user = useSelector((state) => state.user);
   const location = useLocation();
 
-
   useEffect(() => {
     if (location.pathname.includes("/profile/")) {
       setIsProfile(true);
@@ -39,7 +38,7 @@ const TweetContainer = ({ tweets = [], isUserProfile }) => {
     });
   };
 
- useEffect(() => {
+  useEffect(() => {
     const initialRetweets = {};
     tweets.forEach((tweet) => {
       const currentTweet = tweet.Post || tweet;
@@ -54,7 +53,8 @@ const TweetContainer = ({ tweets = [], isUserProfile }) => {
     const seen = new Set();
     return tweets.filter((tweet) => {
       const currentTweet = tweet.Post || tweet; // Considera el caso del retweet
-      if (tweet.Post) { // Si es un retweet
+      if (tweet.Post) {
+        // Si es un retweet
         if (seen.has(currentTweet.id)) {
           return false; // Si el tweet original ya ha sido retuiteado, lo ignoro
         }
@@ -90,6 +90,9 @@ const TweetContainer = ({ tweets = [], isUserProfile }) => {
         const currentTweet = isRetweet ? tweet.Post : tweet;
         return (
           <Tweet
+            isSavedParam={tweet.SavedPostsLists?.some((save) => {
+              save.save_id === user.id;
+            })}
             retweetUser={isRetweet ? tweet.User?.username : null}
             retweetUserId={isRetweet ? tweet.User?.id : null}
             tweetId={currentTweet.id}

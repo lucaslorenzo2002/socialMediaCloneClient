@@ -5,27 +5,21 @@ import MentionIcon from "@mui/icons-material/AlternateEmail";
 import PersonIcon from "@mui/icons-material/Person";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 
-const TwitterNotification = ({ readed, title, text }) => {
+const TwitterNotification = ({ readed, title, text, notification_type }) => {
   let icon;
 
-  switch (title) {
-    case "Te han dado like!":
+  switch (notification_type) {
+    case "like":
       icon = <ThumbUpIcon className="text-blue-500 mr-2" />;
       break;
-    case "Alguien te dió retweet!":
+    case "retweets":
       icon = <ReplyIcon className="text-blue-500 mr-2" />;
       break;
     case "Mention":
       icon = <MentionIcon className="text-blue-500 mr-2" />;
       break;
-    case "Nuevo seguidor!":
-      icon = <PersonIcon className="text-blue-500 mr-2" />;
-      break;
-    case "Bienvenido a la app":
-      icon = <CelebrationIcon className="text-blue-500 mr-2" />;
-      break;
     default:
-      icon = <div></div>;
+      icon = <CelebrationIcon className="text-blue-500 mr-2" />;
   }
 
   return (
