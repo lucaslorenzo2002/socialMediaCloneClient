@@ -1,15 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import axios from "axios";
+import "./TweetInput.css";
 
 import CONFIG from "../../constants/config";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { Mention, MentionsInput } from "react-mentions";
 
 const TweetInput = ({
   isComment = false,
@@ -19,10 +21,35 @@ const TweetInput = ({
 }) => {
   const [input, setInput] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [fileState, setFileState] = useState(null);
   const [showEmojis, setShowEmojis] = useState(false);
+  const [users, setUsers] = useState([]);
 
   const token = useSelector((state) => state.token);
   const user = useSelector((state) => state.user);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`${CONFIG.BASE_URL}/usuarios`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const users = response.data.data.map((user) => ({
+        id: user.id,
+        display: user.username.slice(1),
+      }));
+
+      setUsers(users);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const filePickerRef = useRef(null);
 
@@ -47,13 +74,17 @@ const TweetInput = ({
     reader.onload = (readEvent) => {
       setSelectedFile(readEvent.target.result);
     };
+    setFileState(e.target.files[0]);
   };
 
   const handleTweet = () => {
     if (!isComment) {
       const data = {
         text: input,
+        /*         file: fileState,
+         */
       };
+
       axios
         .post(`${CONFIG.BASE_URL}/crearpost`, data, {
           headers: {
@@ -64,6 +95,7 @@ const TweetInput = ({
         .then((r) => {
           if (r.data.success) {
             toast.success("Tweet creado correctamente");
+            onTweetCreated(r.data.newTweet);
           } else {
             toast.error("Error al crear el tweet");
           }
@@ -120,21 +152,42 @@ const TweetInput = ({
       </Link>
       <div className="w-full divide-y divide-slate-100">
         <div>
-          <textarea
-            placeholder={isComment ? "Add a comment..." : "What's happening?"}
+          <MentionsInput
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            id=""
-            rows="2"
+            placeholder={isComment ? "Add a comment..." : "What's happening?"}
             className={`${
               isComment && "resize-none"
-            } bg-transparent outline-none text-lg placeholder:text-gray-500 tracking-wide w-full min-h-[50px]`}
-          />
+            } bg-transparent p-2 outline-none text-lg placeholder:text-gray-500 tracking-wide w-full min-h-[50px]`}
+          >
+            <Mention
+              trigger="@"
+              data={users}
+              renderSuggestion={(
+                suggestion,
+                search,
+                highlightedDisplay,
+                index,
+                focused
+              ) => (
+                <div
+                  className={`user-suggestion p-2 ${
+                    focused ? "focused bg-slate-100" : ""
+                  }`}
+                >
+                  {highlightedDisplay}
+                </div>
+              )}
+            />
+          </MentionsInput>
           {selectedFile && (
             <div className="relative">
               <div
                 className="absolute w-8 h-8 bg-[#15181C] hover:bg-[#272C26] bg-opacity-75 rounded-full flex items-center justify-center top-1 left-1 cursor-pointer"
-                onClick={() => setSelectedFile(null)}
+                onClick={() => {
+                  setSelectedFile(null);
+                  setFileState(null);
+                }}
               >
                 <CloseIcon className="text-white h-5" />
               </div>

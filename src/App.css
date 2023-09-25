@@ -26,3 +26,11 @@
     background: #9c9c9c;
     /* color del desplazador al hacer hover */
 }
+
+.formNav .false__input {
+    padding: 0.25rem 1rem;
+}
+
+.formNav .false__suggestions {
+    top: 2em !important;
+}

@@ -98,6 +98,7 @@ const TweetContainer = ({ tweets = [], isUserProfile }) => {
             tweetId={currentTweet.id}
             key={currentTweet.id + "user" + currentTweet.User.id}
             content={currentTweet.text}
+            file={currentTweet.file}
             profile={"/defaultProfileImg.png"}
             fullName={currentTweet.User.full_name}
             user={currentTweet.User.username}

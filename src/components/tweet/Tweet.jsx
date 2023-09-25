@@ -35,6 +35,7 @@ const Tweet = ({
   isRetweet,
   retweets = [],
   isUserProfile = false,
+  file,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [localCommentCount, setLocalCommentCount] = useState(comments.length);
@@ -164,7 +165,7 @@ const Tweet = ({
 
   const handleSave = () => {
     setIsSaved(!isSaved);
-  }
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -210,6 +211,29 @@ const Tweet = ({
     });
   };
 
+  function renderContent(content) {
+    let updatedContent = content;
+
+    const mentionRegex = /@\[([^\]]+)\]\(([^)]+)\)/g;
+    const matches = content.match(mentionRegex);
+
+    if (matches) {
+      matches.forEach((match) => {
+        const { username, id } = extractUsernameAndId(match);
+        const link = `<a class="text-blue-400 hover:text-blue-500" href="/profile/${id}">@${username}</a>`;
+        updatedContent = updatedContent.replace(match, link);
+      });
+    }
+
+    return <div dangerouslySetInnerHTML={{ __html: updatedContent }} />;
+  }
+
+  function extractUsernameAndId(mention) {
+    const username = mention.split("@[")[1].split("]")[0];
+    const id = mention.split("(")[1].split(")")[0];
+    return { username, id };
+  }
+  
   return (
     <>
       <div
@@ -248,7 +272,14 @@ const Tweet = ({
             )}
           </div>
 
-          <p>{content}</p>
+          <p>{renderContent(content)}</p>
+          {file && (
+            <img
+              src={file}
+              alt=""
+              className="rounded mt-2 w-full aspect-video object-cover"
+            />
+          )}
           {/* Iconos de interacción */}
           <div className="flex gap-x-4 mt-2 text-slate-400">
             <div className="flex gap-1">
@@ -310,7 +341,7 @@ const Tweet = ({
       <ModalTweet
         isOpen={isModalOpen}
         onClose={closeModal}
-        tweet={{ user, content, profile, fullName, tweetId }}
+        tweet={{ user, content, profile, fullName, tweetId, file }}
         comments={comments}
         likes={localLikesCount}
         isLiked={isLiked}

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 
-
 import axios from "axios";
 import {
   fetchStart,
@@ -19,6 +18,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useLocation } from "react-router-dom";
 import CONFIG from "../../constants/config";
+import { Mention, MentionsInput } from "react-mentions";
 
 const NavBar = () => {
   const location = useLocation();
@@ -64,8 +64,47 @@ const NavBar = () => {
         });
     }
   }, [reduxNotifications, loading, dispatch]); */
+  const token = useSelector((state) => state.token);
+  const [users, setUsers] = useState([]);
 
   const unreaded = reduxNotifications.filter((item) => !item.readed).length;
+
+  const [inputValue, setInputValue] = useState("");
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`${CONFIG.BASE_URL}/usuarios`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const users = response.data.data.map((user) => ({
+        id: user.id,
+        display: user.username.slice(1),
+      }));
+
+      setUsers(users);
+      console.log(users);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+
+    if (inputValue.startsWith("@")) {
+      const username = inputValue.slice(1);
+      window.location.href = `/profile/${username}`;
+    }
+
+    setInputValue("");
+  };
 
   return (
     <header className="w-full bg-white py-4 px-8 border-b border-gray-200 fixed w-full: top-0 z-10">
@@ -101,24 +140,61 @@ const NavBar = () => {
           </div>
 
           {/* Center: Logo */}
-          <div className={`md:w-1/3 w-full flex flex-1 md:justify-center ${isMessagePage && "hidden"}`}>
+          <div
+            className={`md:w-1/3 w-full flex flex-1 md:justify-center ${
+              isMessagePage && "hidden"
+            }`}
+          >
             <img src="/twitter-logo.png" alt="Twitter Logo" width={"40px"} />
           </div>
 
           {/* Right: Search and Tweet Button */}
           <div className="relative ml-4 md:ml-0 lg:w-1/3 md:w-auto w-full">
-            <SearchIcon className="absolute left-3 top-2 text-gray-500" />
-            <input
-              type="text"
-              placeholder="Buscar Usuarios"
-              className={`${
-                isMessagePage && !isDesktopOrLaptop && "hidden"
-              } border rounded-full w-full lg:w-3/4 pl-10 pr-4 py-1 focus:outline-none focus:border-blue-500`}
-            />
+            <form onSubmit={handleSearchSubmit} className="formNav">
+              <MentionsInput
+                value={inputValue} // Proporcionar el valor del estado al input
+                onClick={() => {setInputValue("")}}
+                onChange={(e) => setInputValue(e.target.value)} // Manejar cambios en el input
+                placeholder="Buscar Usuarios"
+                className={`${
+                  isMessagePage && !isDesktopOrLaptop && "hidden"
+                } border rounded-full w-full lg:w-3/4 pl-10 pr-4 py-1 focus:outline-none focus:border-blue-500`}
+              >
+                <Mention
+                  trigger=""
+                  className=""
+                  value={inputValue}
+                  data={users}
+                  renderSuggestion={(
+                    suggestion,
+                    search,
+                    highlightedDisplay,
+                    index,
+                    focused
+                  ) => (
+                    <Link
+                      to={`/profile/${suggestion.id}`}
+                      onClick={() => setInputValue("")}
+                      className={`user my-2 p-2 block ${
+                        focused ? "focused bg-slate-100 w-full h-full" : ""
+                      }`}
+                    >
+                      {highlightedDisplay}
+                    </Link>
+                  )}
+                />
+              </MentionsInput>
+              <button type="submit" className="hidden">
+                Search
+              </button>{" "}
+              {/* Invisible button to allow form submission on Enter */}
+            </form>
           </div>
           <div
             className={`${
-              (isDesktopOrLaptop || isMessagePage) ? "hidden" : "fixed bottom-16 right-5"
+              isDesktopOrLaptop || isMessagePage
+                ? "hidden"
+                : "fixed bottom-16 right-5"
             }`}
           >
             <AddIcon

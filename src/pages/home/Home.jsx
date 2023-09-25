@@ -67,9 +67,10 @@ const Home = () => {
     }
   }, [location]);
 
+
   return (
     <div>
-      {isHome ? <TweetContainer tweets={tweets} /> : null}
+      {isHome ? <TweetContainer tweets={tweets}/> : null}
     </div>
   );
 };
