@@ -10,6 +10,7 @@ const Comment = ({ comment }) => {
   console.log(comment);
   const token = useSelector((state) => state.user.token);
   const user = useSelector((state) => state.user);
+  console.log(comment);
   const isLikedByCurrentUser = comment.Likes?.some(
     (like) => like.user_id === user.id
   );
