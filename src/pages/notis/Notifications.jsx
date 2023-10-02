@@ -102,10 +102,10 @@ const Notificatons = () => {
           altText="No hay notificaciones disponibles."
         />
       )}
-      {activeTab === "Respuestas" && (
+      {activeTab === "Retweets" && (
         <NotificationContainer
-          notis={filterNotificationsByType(notifications, "Nuevo comentario!")}
-          altText="No hay respuestas disponibles."
+          notis={filterNotificationsByType(notifications, "comentario!")}
+          altText="No hay retweets disponibles."
         />
       )}
       {activeTab === "Menciones" && (
@@ -119,7 +119,7 @@ const Notificatons = () => {
       )}
       {activeTab === "Likes" && (
         <NotificationContainer
-          notis={filterNotificationsByType(notifications, "Te han dado like!")}
+          notis={filterNotificationsByType(notifications, "like")}
           altText="No hay likes disponibles."
         />
       )}

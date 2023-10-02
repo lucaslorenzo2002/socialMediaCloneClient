@@ -7,14 +7,15 @@ import toast from "react-hot-toast";
 import CONFIG from "../../constants/config";
 
 const Comment = ({ comment }) => {
+  console.log(comment);
   const token = useSelector((state) => state.user.token);
   const user = useSelector((state) => state.user);
-  const isLikedByCurrentUser = comment.Likes.some(
+  const isLikedByCurrentUser = comment.Likes?.some(
     (like) => like.user_id === user.id
   );
 
   const [isLiked, setIsLiked] = useState(isLikedByCurrentUser);
-  const [localLikes, setLocalLikes] = useState(comment.Likes.length);
+  const [localLikes, setLocalLikes] = useState(comment.Likes?.length);
 
   const handleLike = () => {
     if (!isLiked) {

@@ -34,6 +34,29 @@ const ModalTweet = ({
 
   const [isSaved, setIsSaved] = useState(isSavedParam);
 
+  function renderContent(content) {
+    let updatedContent = content;
+
+    const mentionRegex = /@\[([^\]]+)\]\(([^)]+)\)/g;
+    const matches = content.match(mentionRegex);
+
+    if (matches) {
+      matches.forEach((match) => {
+        const { username, id } = extractUsernameAndId(match);
+        const link = `<span class="text-blue-400 cursor-pointer hover:text-blue-500" onClick={location.pathname="/profile/${id}"} >@${username}</span>`;
+        updatedContent = updatedContent.replace(match, link);
+      });
+    }
+
+    return <div dangerouslySetInnerHTML={{ __html: updatedContent }} />;
+  }
+
+  function extractUsernameAndId(mention) {
+    const username = mention.split("@[")[1].split("]")[0];
+    const id = mention.split("(")[1].split(")")[0];
+    return { username, id };
+  }
+
   useEffect(() => {
     setLocalComments(comments);
   }, [comments]);
@@ -88,7 +111,7 @@ const ModalTweet = ({
                 <span className="font-bold">{tweet.fullName}</span>
                 <span className="text-gray-500">{tweet.user}</span>
               </div>
-              <p>{tweet.content}</p>
+              <p>{renderContent(tweet.content)}</p>
             </div>
           </div>
         </div>

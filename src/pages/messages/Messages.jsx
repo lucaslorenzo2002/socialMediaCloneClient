@@ -4,7 +4,7 @@ import Chat from "./Chat";
 
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-const Messages = () => {
+const Messages = ({socket}) => {
   const [isChatListVisible, setIsChatListVisible] = useState(false);
 
   const chats = [
@@ -71,7 +71,7 @@ const Messages = () => {
         {/* Chat activo */}
         {!isChatListVisible && (
           <div className="flex-1">
-            <Chat fullname={"Usuario 1"} />
+            <Chat fullname={"Usuario 1"} socket={socket} />
           </div>
         )}
       </div>

@@ -13,6 +13,7 @@ import { store } from "./redux/store";
 import { useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { useMediaQuery } from "react-responsive";
+import io from "socket.io-client";
 
 import NavBar from "./components/navBar/NavBar";
 import Home from "./pages/home/Home";
@@ -26,6 +27,15 @@ import Notifications from "./pages/notis/Notifications";
 import SidebarRight from "./components/sidebarRight/SidebarRight";
 import SidebarLeft from "./components/sidebarLeft/SidebarLeft";
 import Messages from "./pages/messages/Messages";
+import CONFIG from "./constants/config";
+
+const token = localStorage.getItem("token");
+
+const socket = io(CONFIG.BASE_URL, {
+  auth: {
+    token: `Bearer ${token}`,
+  },
+});
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -75,6 +85,16 @@ const Layout = () => {
 };
 
 function App() {
+  useEffect(() => {
+    // Conecta con websocket
+    socket.connect();
+
+    // Se desuscribe cuando se desmonta el componente
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <div className="overflow-x-hidden">
       <Provider store={store}>
@@ -89,7 +109,7 @@ function App() {
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/saved" element={<Saved />} />
             </Route>
-            <Route path="/messages" element={<Messages />} />
+            <Route path="/messages" element={<Messages socket={socket} />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<RegisterPage />} />
             <Route path="*" element={<Error />} />

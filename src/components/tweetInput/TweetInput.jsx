@@ -6,6 +6,9 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import axios from "axios";
 import "./TweetInput.css";
+import { useDispatch } from "react-redux";
+
+import { setUsers } from "../../redux/userListSlice";
 
 import CONFIG from "../../constants/config";
 import { toast } from "react-hot-toast";
@@ -23,33 +26,12 @@ const TweetInput = ({
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileState, setFileState] = useState(null);
   const [showEmojis, setShowEmojis] = useState(false);
-  const [users, setUsers] = useState([]);
+
+  const dispatch = useDispatch();
 
   const token = useSelector((state) => state.token);
   const user = useSelector((state) => state.user);
-
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get(`${CONFIG.BASE_URL}/usuarios`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const users = response.data.data.map((user) => ({
-        id: user.id,
-        display: user.username.slice(1),
-      }));
-
-      setUsers(users);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const users = useSelector((state) => state.users);
 
   const filePickerRef = useRef(null);
 
@@ -81,8 +63,7 @@ const TweetInput = ({
     if (!isComment) {
       const data = {
         text: input,
-        /*         file: fileState,
-         */
+        /* file: fileState, */
       };
 
       axios
@@ -95,7 +76,6 @@ const TweetInput = ({
         .then((r) => {
           if (r.data.success) {
             toast.success("Tweet creado correctamente");
-            onTweetCreated(r.data.newTweet);
           } else {
             toast.error("Error al crear el tweet");
           }
@@ -125,6 +105,7 @@ const TweetInput = ({
                 id: user.id,
               },
               comment: input,
+              Likes: [],
             };
             toast.success("Respuesta creada correctamente");
             onNewComment && onNewComment(newComment);
@@ -141,6 +122,35 @@ const TweetInput = ({
     setShowEmojis(false);
     setSelectedFile(null);
   };
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`${CONFIG.BASE_URL}/usuarios`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const usersData = response.data.data.map((user) => ({
+        id: user.id,
+        display: user.username.slice(1),
+        username: user.username,
+        img: user.profile_photo,
+      }));
+
+      dispatch(setUsers(usersData)); // Despacha la acción para actualizar el estado global
+      console.log(usersData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!users.length) {
+      fetchUsers();
+    }
+  }, []);
+
   return (
     <div className={`border-b border-slate-100 p-3 flex space-x-3 mt-1`}>
       <Link to={`/profile/${user.id}`} className="h-11 w-11">

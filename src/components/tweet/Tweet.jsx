@@ -220,7 +220,7 @@ const Tweet = ({
     if (matches) {
       matches.forEach((match) => {
         const { username, id } = extractUsernameAndId(match);
-        const link = `<a class="text-blue-400 hover:text-blue-500" href="/profile/${id}">@${username}</a>`;
+        const link = `<span class="text-blue-400 cursor-pointer hover:text-blue-500" onClick={location.pathname="/profile/${id}"} >@${username}</span>`;
         updatedContent = updatedContent.replace(match, link);
       });
     }
@@ -233,7 +233,7 @@ const Tweet = ({
     const id = mention.split("(")[1].split(")")[0];
     return { username, id };
   }
-  
+
   return (
     <>
       <div

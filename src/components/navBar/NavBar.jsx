@@ -9,12 +9,13 @@ import {
   fetchError,
 } from "../../redux/notificationsSlice";
 
+import { setUsers } from "../../redux/userListSlice"; // Importa la acción setUsers
+
 import HomeIcon from "@mui/icons-material/Home";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useLocation } from "react-router-dom";
 import CONFIG from "../../constants/config";
@@ -36,8 +37,6 @@ const NavBar = () => {
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
-
-  const dispatch = useDispatch();
 
   const isDesktopOrLaptop = useMediaQuery({
     query: "(min-device-width: 1224px)",
@@ -64,8 +63,11 @@ const NavBar = () => {
         });
     }
   }, [reduxNotifications, loading, dispatch]); */
+
+  const dispatch = useDispatch();
+
   const token = useSelector((state) => state.token);
-  const [users, setUsers] = useState([]);
+  const users = useSelector((state) => state.users);
 
   const unreaded = reduxNotifications.filter((item) => !item.readed).length;
 
@@ -79,20 +81,25 @@ const NavBar = () => {
         },
       });
 
-      const users = response.data.data.map((user) => ({
+      const usersData = response.data.data.map((user) => ({
         id: user.id,
         display: user.username.slice(1),
+        username: user.username,
+        img: user.profile_photo,
       }));
 
-      setUsers(users);
-      console.log(users);
+      dispatch(setUsers(usersData)); // Despacha la acción para actualizar el estado global
+      console.log(usersData);
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    fetchUsers();
+    if (!users.length) {
+      // Si no hay usuarios en el estado global, entonces los busca
+      fetchUsers();
+    }
   }, []);
 
   const handleSearchSubmit = (e) => {
@@ -153,7 +160,9 @@ const NavBar = () => {
             <form onSubmit={handleSearchSubmit} className="formNav">
               <MentionsInput
                 value={inputValue} // Proporcionar el valor del estado al input
-                onClick={() => {setInputValue("")}}
+                onClick={() => {
+                  setInputValue("");
+                }}
                 onChange={(e) => setInputValue(e.target.value)} // Manejar cambios en el input
                 placeholder="Buscar Usuarios"
                 className={`${
@@ -190,21 +199,9 @@ const NavBar = () => {
               {/* Invisible button to allow form submission on Enter */}
             </form>
           </div>
-          <div
-            className={`${
-              isDesktopOrLaptop || isMessagePage
-                ? "hidden"
-                : "fixed bottom-16 right-5"
-            }`}
-          >
-            <AddIcon
-              style={{ fontSize: "2.5rem" }}
-              className="cursor-pointer text-white bg-blue-500 p-2 rounded-full"
-            />
-          </div>
         </div>
       </div>
-
+      
       {/* Mobile Bottom Navbar */}
       {!isDesktopOrLaptop && (
         <div
