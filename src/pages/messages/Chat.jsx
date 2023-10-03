@@ -17,9 +17,11 @@ const Chat = ({
 
   const sendMessage = () => {
     // Manda mensaje al server
-    const userId = user.id;
+    const userId = 7;
+    console.log(userId);
     const chatId = 1;
     socket.emit("send message", message, userId, chatId);
+    console.log("enviado");
 
     // Agrega mensaje a la lista
     const sentMessage = {
@@ -33,9 +35,27 @@ const Chat = ({
   };
 
   useEffect(() => {
+    console.log("getting messages");
+    socket.on("get messages", (messages) => {
+      console.log(messages);
+    });
+
+    return () => {
+      socket.off("get messages");
+    };
+  }, []);
+
+  useEffect(() => {
     // Suscribe a get new message
-    socket.on("get new message", (newMessage) => {
+    socket.on("get new message", (msg) => {
+      console.log(msg[msg.length-1]);
+     const lastMessage = msg[msg.length-1];
       // Agrega mensaje recibido a la lista
+      const newMessage = {
+        text: lastMessage.message,
+        isOwnMessage: lastMessage.user_id === user.id,
+      }
+      console.log(newMessage.isOwnMessage);
       setMessagesList((prevMessages) => [...prevMessages, newMessage]);
     });
 

@@ -1,4 +1,4 @@
-const BASE_URL = "https://social-media-clone-brown.vercel.app/api";
+const BASE_URL = "https://socialmediaclone-production-1e63.up.railway.app/api";
 
 const CONFIG = {
   BASE_URL,

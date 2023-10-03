@@ -27,11 +27,10 @@ import Notifications from "./pages/notis/Notifications";
 import SidebarRight from "./components/sidebarRight/SidebarRight";
 import SidebarLeft from "./components/sidebarLeft/SidebarLeft";
 import Messages from "./pages/messages/Messages";
-import CONFIG from "./constants/config";
 
 const token = localStorage.getItem("token");
 
-const socket = io(CONFIG.BASE_URL, {
+const socket = io("https://socialmediaclone-production-1e63.up.railway.app/", {
   auth: {
     token: `Bearer ${token}`,
   },
@@ -93,7 +92,7 @@ function App() {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [token]);
 
   return (
     <div className="overflow-x-hidden">
