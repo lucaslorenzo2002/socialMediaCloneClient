@@ -75,7 +75,17 @@ const Profile = () => {
   const handleClickFollow = (newIsFollowing) => {
     newIsFollowing ? setFollowers(followers + 1) : setFollowers(followers - 1);
   };
-
+  const handleCreateChat = () => {
+    axios
+      .post(`${CONFIG.BASE_URL}/crearchat/${profileData?.id}`,{}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      });
+  };
   return (
     <div className="flex flex-col items-center p-8 bg-white min-h-screen">
       <img
@@ -87,13 +97,26 @@ const Profile = () => {
         <h1 className="text-2xl font-bold mt-4">{profileData?.full_name}</h1>
         <p className="text-gray-500">{profileData?.username}</p>
       </div>
-      {profileData?.id !== user.id && (
-        <FollowBtn
-          profileData={profileData}
-          isFollowing={profileData?.isFollowing}
-          onClick={(newIsFollowing) => handleClickFollow(newIsFollowing)}
-        />
-      )}
+      <div className="flex gap-2">
+        {profileData?.id !== user.id && (
+          <FollowBtn
+            profileData={profileData}
+            isFollowing={profileData?.isFollowing}
+            onClick={(newIsFollowing) => handleClickFollow(newIsFollowing)}
+          />
+        )}
+        {profileData?.id !== user.id && (
+          <div className="mt-4">
+            <button
+              onClick={handleCreateChat}
+              className={`px-4 py-2 hover:bg-blue-600 hover:border-blue-600 hover:text-white  border-blue-500 text-blue-500"
+             rounded-full border-2 duration-200 transition-colors`}
+            >
+              Chat
+            </button>
+          </div>
+        )}
+      </div>
       <div className="mt-4 flex space-x-8">
         <div className="flex flex-col justify-center items-center">
           <p className="text-xl font-semibold">{followers}</p>

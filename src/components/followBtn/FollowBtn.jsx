@@ -46,7 +46,7 @@ const FollowBtn = ({ isFollowing = false, profileData = null, onClick }) => {
           isFollowingState
             ? "bg-transparent  border-blue-500 text-blue-500"
             : "bg-blue-500 border-blue-500 text-white"
-        } rounded-full border-2`}
+        } rounded-full border-2 hover:bg-blue-600 hover:border-blue-600 duration-300 transition-colors`}
         onClick={handleFollowClick}
       >
         {btnText}

@@ -6,6 +6,7 @@ import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { useSelector } from "react-redux";
 
 const Chat = ({
+  chatId,
   socket,
   username,
   fullname,
@@ -17,17 +18,15 @@ const Chat = ({
 
   const sendMessage = () => {
     // Manda mensaje al server
-    const userId = 7;
-    console.log(userId);
-    const chatId = 1;
+    const userId = user.id;
     socket.emit("send message", message, userId, chatId);
-    console.log("enviado");
 
     // Agrega mensaje a la lista
     const sentMessage = {
       text: message,
       isOwnMessage: true,
     };
+
     setMessagesList((prevMessages) => [...prevMessages, sentMessage]);
 
     // Clear input
@@ -35,7 +34,6 @@ const Chat = ({
   };
 
   useEffect(() => {
-    console.log("getting messages");
     socket.on("get messages", (messages) => {
       console.log(messages);
     });
@@ -48,14 +46,13 @@ const Chat = ({
   useEffect(() => {
     // Suscribe a get new message
     socket.on("get new message", (msg) => {
-      console.log(msg[msg.length-1]);
-     const lastMessage = msg[msg.length-1];
+      const lastMessage = msg[msg.length - 1];
       // Agrega mensaje recibido a la lista
       const newMessage = {
         text: lastMessage.message,
         isOwnMessage: lastMessage.user_id === user.id,
-      }
-      console.log(newMessage.isOwnMessage);
+      };
+      console.log(msg);
       setMessagesList((prevMessages) => [...prevMessages, newMessage]);
     });
 
@@ -64,6 +61,44 @@ const Chat = ({
       socket.off("get new message");
     };
   }, []);
+  if (username === "") {
+    return (
+      <div className="flex-1 p-2 sm:p-6 justify-between flex flex-col h-[calc(100vh-5rem)]">
+        <div className="flex sm:items-center justify-between py-3 border-gray-200">
+          <h1 className="text-center w-full text-slate-400 mt-5">
+            Entra a un chat para ver su contenido
+          </h1>
+        </div>
+
+        <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
+          <div className="relative flex">
+            <input
+              type="text"
+              placeholder="Escribe un mensaje..."
+              className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 bg-gray-200 rounded-md py-3"
+              value={message}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  sendMessage();
+                }
+              }}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <div className="absolute right-0 items-center inset-y-0 hidden sm:flex">
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-600 focus:outline-none"
+                onClick={sendMessage}
+              >
+                <span className="font-bold">Send</span>
+                <SendRoundedIcon className="ml-2" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-2 sm:p-6 justify-between flex flex-col h-[calc(100vh-5rem)]">
