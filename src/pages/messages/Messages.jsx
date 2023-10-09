@@ -13,12 +13,9 @@ const Messages = ({ socket }) => {
 
   const [isChatListVisible, setIsChatListVisible] = useState(false);
   const [chats, setChats] = useState([]);
-  const [chatName, setChatName] = useState("");
-  const [chatUserName, setChatUserName] = useState("");
-  const [chatProfilePhoto, setChatProfilePhoto] = useState("");
+  const [selectedChat, setSelectedChat] = useState(null);
 
   useEffect(() => {
-    console.log("getting chats");
     axios
       .get(
         `${CONFIG.BASE_URL}/mischats`,
@@ -38,9 +35,7 @@ const Messages = ({ socket }) => {
   }, []);
 
   const openChat = (chat) => {
-    setChatName(chat.full_name);
-    setChatUserName(chat.username);
-    setChatProfilePhoto(chat.profilePhoto);
+    setSelectedChat(chat);
   };
 
   return (
@@ -68,7 +63,11 @@ const Messages = ({ socket }) => {
           } overflow-hidden md:w-64`}
         >
           <h3 className="ml-4 text-xl font-bold mt-3">Tus Chats</h3>
-          {chats.length === 0 && <p className="px-5 mt-5 text-slate-400">No tienes chats disponibles</p>}
+          {chats.length === 0 && (
+            <p className="px-5 mt-5 text-slate-400">
+              No tienes chats disponibles
+            </p>
+          )}
           {chats.map((chat, index) => (
             <div
               key={index}
@@ -89,12 +88,13 @@ const Messages = ({ socket }) => {
         </div>
 
         {/* Chat activo */}
-        {!isChatListVisible && (
+        {!isChatListVisible && selectedChat && (
           <div className="flex-1">
             <Chat
-              fullname={chatName}
-              username={chatUserName}
-              profile_photo={chatProfilePhoto}
+              chatId={selectedChat.id}
+              fullname={selectedChat.full_name}
+              username={selectedChat.username}
+              profile_photo={selectedChat.profilePhoto}
               socket={socket}
             />
           </div>

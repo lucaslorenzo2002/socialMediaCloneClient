@@ -20,7 +20,7 @@ const Chat = ({
     // Manda mensaje al server
     const userId = user.id;
     socket.emit("send message", message, userId, chatId);
-
+    console.log(message);
     // Agrega mensaje a la lista
     const sentMessage = {
       text: message,
@@ -46,6 +46,7 @@ const Chat = ({
   useEffect(() => {
     // Suscribe a get new message
     socket.on("get new message", (msg) => {
+      console.log(msg);
       const lastMessage = msg[msg.length - 1];
       // Agrega mensaje recibido a la lista
       const newMessage = {
