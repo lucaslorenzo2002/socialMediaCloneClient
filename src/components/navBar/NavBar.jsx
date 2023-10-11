@@ -217,7 +217,7 @@ const NavBar = () => {
           <Link to="/messages">
             <MailOutlineIcon className="cursor-pointer hover:text-blue-500" />
           </Link>
-          <Link to={`/profile/${user.id}`}>
+          <Link to={`/profile/${user?.id}`}>
             <PersonOutlineIcon className="cursor-pointer hover:text-blue-500" />
           </Link>
 
