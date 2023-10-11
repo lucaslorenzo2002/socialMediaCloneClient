@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import CONFIG from "../../constants/config";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     full_name: "",
@@ -31,6 +33,7 @@ const RegisterPage = () => {
       );
       console.log(response.data);
       setIsLoading(false);
+      navigate("/emailConfirmation");
     } catch (error) {
       console.error("Hubo un error al registrar:", error);
       setIsLoading(false);

@@ -28,6 +28,7 @@ import SidebarRight from "./components/sidebarRight/SidebarRight";
 import SidebarLeft from "./components/sidebarLeft/SidebarLeft";
 import Messages from "./pages/messages/Messages";
 import Settings from "./pages/settings/Settings";
+import EmailConfirm from "./pages/emailConfirm/emailConfirm";
 
 const token = localStorage.getItem("token");
 
@@ -105,7 +106,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
-              <Route path="/profile/:id" element={<Profile />} />
+              <Route path="/profile/:id" element={<Profile socket={socket} />} />
               <Route path="/explore" element={<Explore />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/saved" element={<Saved />} />
@@ -115,6 +116,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<RegisterPage />} />
             <Route path="*" element={<Error />} />
+            <Route path="/emailConfirmation" element={<EmailConfirm />} />
           </Routes>
         </Router>
       </Provider>

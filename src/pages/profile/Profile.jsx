@@ -7,7 +7,7 @@ import CONFIG from "../../constants/config";
 import FollowBtn from "../../components/followBtn/FollowBtn";
 import TweetContainer from "../../components/tweetContainer/TweetContainer";
 
-const Profile = () => {
+const Profile = ({socket}) => {
   const [profileData, setProfileData] = useState(null);
   const [followers, setFollowers] = useState(0);
 
@@ -16,6 +16,12 @@ const Profile = () => {
   const token = useSelector((state) => state.token);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    socket.on("user", user => {
+      console.log(user);
+    })
+  },[])
 
   useEffect(() => {
     axios
