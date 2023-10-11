@@ -3,7 +3,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import tokenReducer from "./tokenSlice";
 import userReducer from "./userSlice";
 import notificationsReducer from "./notificationsSlice";
-import userListSlice from "./userListSlice";
 
 // Intenta obtener el estado desde el localStorage
 const preloadedState = localStorage.getItem("reduxState")
@@ -15,7 +14,6 @@ export const store = configureStore({
     token: tokenReducer,
     user: userReducer,
     notifications: notificationsReducer,
-    users: userListSlice,
   },
   preloadedState, // Usa el estado obtenido del localStorage (si existe) al inicializar la tienda
 });

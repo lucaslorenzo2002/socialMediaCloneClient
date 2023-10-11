@@ -8,8 +8,6 @@ import axios from "axios";
 import "./TweetInput.css";
 import { useDispatch } from "react-redux";
 
-import { setUsers } from "../../redux/userListSlice";
-
 import CONFIG from "../../constants/config";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -27,11 +25,10 @@ const TweetInput = ({
   const [fileState, setFileState] = useState(null);
   const [showEmojis, setShowEmojis] = useState(false);
 
-  const dispatch = useDispatch();
+  const [allUsers, setAllUsers] = useState([]); // Obtiene la lista de usuarios del estado global
 
   const token = useSelector((state) => state.token);
   const user = useSelector((state) => state.user);
-  const users = useSelector((state) => state.users);
 
   const filePickerRef = useRef(null);
 
@@ -138,7 +135,8 @@ const TweetInput = ({
         img: user.profile_photo,
       }));
 
-      dispatch(setUsers(usersData)); // Despacha la acción para actualizar el estado global
+      setAllUsers(usersData);
+
       console.log(usersData);
     } catch (error) {
       console.error(error);
@@ -146,9 +144,7 @@ const TweetInput = ({
   };
 
   useEffect(() => {
-    if (!users.length) {
-      fetchUsers();
-    }
+    fetchUsers();
   }, []);
 
   return (
@@ -172,7 +168,7 @@ const TweetInput = ({
           >
             <Mention
               trigger="@"
-              data={users}
+              data={allUsers}
               renderSuggestion={(
                 suggestion,
                 search,

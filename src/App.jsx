@@ -27,6 +27,7 @@ import Notifications from "./pages/notis/Notifications";
 import SidebarRight from "./components/sidebarRight/SidebarRight";
 import SidebarLeft from "./components/sidebarLeft/SidebarLeft";
 import Messages from "./pages/messages/Messages";
+import Settings from "./pages/settings/Settings";
 
 const token = localStorage.getItem("token");
 
@@ -39,6 +40,7 @@ const socket = io("https://socialmediaclone-production-1e63.up.railway.app/", {
 const Layout = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+
 
   useEffect(() => {
     if (!user) {
@@ -107,6 +109,7 @@ function App() {
               <Route path="/explore" element={<Explore />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/saved" element={<Saved />} />
+              <Route path="/settings" element={<Settings />} />
             </Route>
             <Route path="/messages" element={<Messages socket={socket} />} />
             <Route path="login" element={<Login />} />

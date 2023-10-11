@@ -15,6 +15,7 @@ import CONFIG from "../../constants/config";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 import "./Tweet.css";
 
@@ -47,6 +48,7 @@ const Tweet = ({
   const [isSaved, setIsSaved] = useState(isSavedParam);
   const [localRetweetCount, setLocalRetweetCount] = useState(retweets.length);
 
+
   function isUserARetweeter(data) {
     for (let item of data) {
       if (item.user_id && item.user_id === globalUser.id) {
@@ -62,6 +64,7 @@ const Tweet = ({
     }
     return false;
   }
+
 
   useEffect(() => {
     setIsRetweetedState(isUserARetweeter(retweets));
@@ -213,6 +216,7 @@ const Tweet = ({
   };
 
   function renderContent(content) {
+
     let updatedContent = content;
 
     const mentionRegex = /@\[([^\]]+)\]\(([^)]+)\)/g;

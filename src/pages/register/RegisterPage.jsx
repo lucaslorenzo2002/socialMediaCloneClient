@@ -22,10 +22,11 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
+    console.log(formData);
     try {
       const response = await axios.post(
         `${CONFIG.BASE_URL}/register`,
+
         formData
       );
       console.log(response.data);

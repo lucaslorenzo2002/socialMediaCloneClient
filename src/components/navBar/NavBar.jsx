@@ -9,8 +9,6 @@ import {
   fetchError,
 } from "../../redux/notificationsSlice";
 
-import { setUsers } from "../../redux/userListSlice"; // Importa la acción setUsers
-
 import HomeIcon from "@mui/icons-material/Home";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -64,10 +62,9 @@ const NavBar = () => {
     }
   }, [reduxNotifications, loading, dispatch]); */
 
-  const dispatch = useDispatch();
+  const [allUsers, setAllUsers] = useState([]); // Obtiene la lista de usuarios del estado global
 
   const token = useSelector((state) => state.token);
-  const users = useSelector((state) => state.users);
 
   const unreaded = reduxNotifications.filter((item) => !item.readed).length;
 
@@ -88,7 +85,7 @@ const NavBar = () => {
         img: user.profile_photo,
       }));
 
-      dispatch(setUsers(usersData)); // Despacha la acción para actualizar el estado global
+      setAllUsers(usersData);
       console.log(usersData);
     } catch (error) {
       console.error(error);
@@ -96,10 +93,7 @@ const NavBar = () => {
   };
 
   useEffect(() => {
-    if (!users.length) {
-      // Si no hay usuarios en el estado global, entonces los busca
-      fetchUsers();
-    }
+    fetchUsers();
   }, []);
 
   const handleSearchSubmit = (e) => {
@@ -173,7 +167,7 @@ const NavBar = () => {
                   trigger=""
                   className=""
                   value={inputValue}
-                  data={users}
+                  data={allUsers}
                   renderSuggestion={(
                     suggestion,
                     search,
@@ -201,7 +195,7 @@ const NavBar = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Mobile Bottom Navbar */}
       {!isDesktopOrLaptop && (
         <div

@@ -1,14 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import FollowBtn from "../../components/followBtn/FollowBtn";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import CONFIG from "../../constants/config";
 
 const Explore = () => {
   const [username, setUsername] = useState("");
-  const allUsers = useSelector((state) => state.users);
+  const [allUsers, setAllUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState(allUsers);
 
+  useEffect(() => {
+    try {
+      axios
+        .get(`${CONFIG.BASE_URL}/usuarios`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          const usersData = response.data.data.map((user) => ({
+            id: user.id,
+            display: user.username.slice(1),
+            username: user.username,
+            img: user.profile_photo,
+          }));
+
+          setAllUsers(usersData);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  
   const handleSearch = (value) => {
     setUsername(value);
     const filtered = allUsers.filter((user) =>

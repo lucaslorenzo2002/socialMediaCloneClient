@@ -20,21 +20,23 @@ const Chat = ({
     // Manda mensaje al server
     const userId = user.id;
     socket.emit("send message", message, userId, chatId);
-    console.log(message);
-    // Agrega mensaje a la lista
-    const sentMessage = {
-      text: message,
-      isOwnMessage: true,
-    };
-
-    setMessagesList((prevMessages) => [...prevMessages, sentMessage]);
 
     // Clear input
     setMessage("");
   };
 
   useEffect(() => {
+    console.log(chatId);
+    socket.emit("join chat", chatId);
+  }, [chatId]);
+
+  useEffect(() => {
     socket.on("get messages", (messages) => {
+      const messagesList = messages.map((message) => ({
+        text: message.message,
+        isOwnMessage: message.user_id === user.id,
+      }));
+      setMessagesList(messagesList);
       console.log(messages);
     });
 
