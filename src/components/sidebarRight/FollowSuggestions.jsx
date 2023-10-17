@@ -2,21 +2,22 @@ import React, { useEffect, useState } from "react";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import axios, { all } from "axios";
+import axios from "axios";
 import CONFIG from "../../constants/config";
 
 const FollowSuggestions = () => {
   const [allUsers, setAllUsers] = useState([]); // Obtiene la lista de usuarios del estado global
+  const token = useSelector((state) => state.token);
 
   useEffect(() => {
     axios
       .get(`${CONFIG.BASE_URL}/usuarios`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setAllUsers(response.data);
+        setAllUsers(response.data.data);
       });
   }, []);
 
@@ -27,7 +28,7 @@ const FollowSuggestions = () => {
   };
   const userCount = allUsers.length < 3 ? allUsers.length : 3;
 
-  const users = [] || getRandomUsers(allUsers, userCount); // Obtiene 3 usuarios aleatorios TODO
+  const users = getRandomUsers(allUsers, userCount); // Obtiene 3 usuarios aleatorios TODO
 
   return (
     <div>

@@ -34,6 +34,16 @@ const EditProfile = () => {
     console.log("Profile updated:", profileData);
   };
 
+  const handleNameChange = (event) => {
+    const { value } = event.target;
+    setProfileData((prevData) => ({ ...prevData, full_name: value }));
+  };
+
+  const handleBioChange = (event) => {
+    const { value } = event.target;
+    setProfileData((prevData) => ({ ...prevData, bio: value }));
+  };
+
   return (
     <div className="flex flex-col items-center p-8 bg-white min-h-screen">
       <div className="mb-8">
@@ -58,7 +68,7 @@ const EditProfile = () => {
         type="text"
         name="full_name"
         value={profileData.full_name || ""}
-        onChange={handleInputChange}
+        onChange={handleNameChange}
         placeholder="Full Name"
         className="border border-gray-300 p-2 mb-4 w-full rounded"
       />
@@ -67,10 +77,20 @@ const EditProfile = () => {
         <input
           type="text"
           name="username"
-          value={profileData.username?.replace(/^@/, "") || ""}  // Quitamos el '@' del inicio si es que lo tiene
+          value={profileData.username?.replace(/^@/, "") || ""} // Quitamos el '@' del inicio si es que lo tiene
           onChange={handleInputChange}
           placeholder="Username"
           className="ml-2 flex-1 focus:outline-none"
+        />
+      </div>
+      <div className="flex items-center border border-gray-300 p-2 mb-4 w-full rounded">
+        <textarea
+          value={profileData.bio || ""}
+          type="text"
+          name="bio"
+          onChange={handleBioChange}
+          placeholder="Bio"
+          className="ml-2 flex-1 focus:outline-none h-10 resize-none"
         />
       </div>
       <button

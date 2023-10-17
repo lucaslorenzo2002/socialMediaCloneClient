@@ -89,6 +89,7 @@ const Profile = ({socket}) => {
         },
       })
       .then((response) => {
+        navigate("/messages")
         console.log(response);
       });
   };

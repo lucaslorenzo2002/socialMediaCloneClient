@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { useSelector } from "react-redux";
+import { useRef } from "react";
 
 const Chat = ({
-  chatId,
   socket,
   username,
   fullname,
@@ -15,7 +15,9 @@ const Chat = ({
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState([]);
   const user = useSelector((state) => state.user);
+  const messagesEndRef = useRef(null);
 
+  const chatId = 3;
   const sendMessage = () => {
     // Manda mensaje al server
     const userId = user.id;
@@ -26,37 +28,36 @@ const Chat = ({
   };
 
   useEffect(() => {
-    console.log(chatId);
     socket.emit("join chat", chatId);
   }, [chatId]);
 
   useEffect(() => {
     socket.on("get messages", (messages) => {
-      const messagesList = messages.map((message) => ({
+      const newMessagesList = messages.map((message) => ({
         text: message.message,
         isOwnMessage: message.user_id === user.id,
       }));
-      setMessagesList(messagesList);
-      console.log(messages);
+      setMessagesList(newMessagesList);
     });
 
     return () => {
       socket.off("get messages");
     };
-  }, []);
+  }, [messagesList]);
 
   useEffect(() => {
     // Suscribe a get new message
     socket.on("get new message", (msg) => {
-      console.log(msg);
-      const lastMessage = msg[msg.length - 1];
-      // Agrega mensaje recibido a la lista
-      const newMessage = {
-        text: lastMessage.message,
-        isOwnMessage: lastMessage.user_id === user.id,
-      };
-      console.log(msg);
-      setMessagesList((prevMessages) => [...prevMessages, newMessage]);
+      const newMessagesList = msg.map((message) => ({
+        text: message.message,
+        isOwnMessage: message.user_id === user.id,
+      }));
+
+      console.log(
+        "nuevo mensaje: " + newMessagesList[newMessagesList.length - 1].text
+      );
+
+      setMessagesList(newMessagesList);
     });
 
     // Se desuscribe cuando se desmonta el componente
@@ -64,7 +65,16 @@ const Chat = ({
       socket.off("get new message");
     };
   }, []);
-  if (username === "") {
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messagesList]);
+
+  if (!username || username === "") {
     return (
       <div className="flex-1 p-2 sm:p-6 justify-between flex flex-col h-[calc(100vh-5rem)]">
         <div className="flex sm:items-center justify-between py-3 border-gray-200">
@@ -139,7 +149,9 @@ const Chat = ({
             user={username}
           />
         ))}
+        <div ref={messagesEndRef} />
       </div>
+
       <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
         <div className="relative flex">
           <input

@@ -71,7 +71,10 @@ const Messages = ({ socket }) => {
           {chats.map((chat, index) => (
             <div
               key={index}
-              onClick={() => openChat(chat)}
+              onClick={() => {
+                setIsChatListVisible(false);
+                openChat(chat);
+              }}
               className="flex items-center p-4 border-b cursor-pointer hover:bg-gray-100"
             >
               <img
