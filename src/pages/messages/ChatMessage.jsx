@@ -1,6 +1,18 @@
 import React from "react";
 
-const ChatMessage = ({ text, profile_photo = 'defaultProfileImg.png', user, isOwnMessage }) => {
+const ChatMessage = ({
+  text,
+  profile_photo,
+  user,
+  isOwnMessage,
+  createdAt,
+  readed = false,
+}) => {
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return `${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
+  };
+
   if (isOwnMessage) {
     return (
       <div className="chat-message">
@@ -10,6 +22,14 @@ const ChatMessage = ({ text, profile_photo = 'defaultProfileImg.png', user, isOw
               <span className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white">
                 {text}
               </span>
+            </div>
+            <div className="text-xs">
+              <span className="text-gray-500">{formatDate(createdAt)} </span>
+              {readed ? (
+                <span className="mx-1 !text-blue-500 font-bold tracking-[-0.3rem]">✓✓</span>
+              ) : (
+                <span className="mx-1 font-bold tracking-[-0.3rem]">✓</span>
+              )}
             </div>
           </div>
           <img
@@ -29,6 +49,10 @@ const ChatMessage = ({ text, profile_photo = 'defaultProfileImg.png', user, isOw
               <span className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">
                 {text}
               </span>
+            </div>
+            <div className="text-gray-500 text-xs">
+              {formatDate(createdAt)}{" "}
+              {readed && <span className="ml-2">✓</span>}
             </div>
           </div>
           <img

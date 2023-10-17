@@ -38,6 +38,7 @@ const Tweet = ({
   isUserProfile = false,
   file,
 }) => {
+  console.log(file);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [localCommentCount, setLocalCommentCount] = useState(comments.length);
   const [localLikesCount, setLocalLikesCount] = useState(likes.length);
@@ -47,7 +48,6 @@ const Tweet = ({
 
   const [isSaved, setIsSaved] = useState(isSavedParam);
   const [localRetweetCount, setLocalRetweetCount] = useState(retweets.length);
-
 
   function isUserARetweeter(data) {
     for (let item of data) {
@@ -64,7 +64,6 @@ const Tweet = ({
     }
     return false;
   }
-
 
   useEffect(() => {
     setIsRetweetedState(isUserARetweeter(retweets));
@@ -167,7 +166,6 @@ const Tweet = ({
   };
 
   const handleSave = () => {
-    
     setIsSaved(!isSaved);
   };
 
@@ -216,7 +214,6 @@ const Tweet = ({
   };
 
   function renderContent(content) {
-
     let updatedContent = content;
 
     const mentionRegex = /@\[([^\]]+)\]\(([^)]+)\)/g;

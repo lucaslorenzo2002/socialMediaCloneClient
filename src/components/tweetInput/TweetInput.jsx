@@ -60,7 +60,7 @@ const TweetInput = ({
     if (!isComment) {
       const data = {
         text: input,
-        /* file: fileState, */
+        file: fileState,
       };
 
       axios

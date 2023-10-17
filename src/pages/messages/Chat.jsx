@@ -11,13 +11,13 @@ const Chat = ({
   username,
   fullname,
   profile_photo = "/defaultProfileImg.png",
+  chatId,
 }) => {
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState([]);
   const user = useSelector((state) => state.user);
   const messagesEndRef = useRef(null);
 
-  const chatId = 3;
   const sendMessage = () => {
     // Manda mensaje al server
     const userId = user.id;
@@ -28,7 +28,8 @@ const Chat = ({
   };
 
   useEffect(() => {
-    socket.emit("join chat", chatId);
+    socket.emit("join chat", 1);
+    console.log(chatId);
   }, [chatId]);
 
   useEffect(() => {
@@ -36,6 +37,8 @@ const Chat = ({
       const newMessagesList = messages.map((message) => ({
         text: message.message,
         isOwnMessage: message.user_id === user.id,
+        createdAt: message.createdAt,
+        readed: message.readed,
       }));
       setMessagesList(newMessagesList);
     });
@@ -46,18 +49,22 @@ const Chat = ({
   }, [messagesList]);
 
   useEffect(() => {
+    console.log(messagesList);
+  }, [messagesList]);
+
+  useEffect(() => {
     // Suscribe a get new message
     socket.on("get new message", (msg) => {
-      const newMessagesList = msg.map((message) => ({
-        text: message.message,
-        isOwnMessage: message.user_id === user.id,
-      }));
+      console.log(messagesList);
+      console.log(msg);
+      const newMessage = {
+        text: msg.message,
+        isOwnMessage: msg.user_id === user.id,
+        createdAt: msg.createdAt,
+        readed: msg.readed,
+      };
 
-      console.log(
-        "nuevo mensaje: " + newMessagesList[newMessagesList.length - 1].text
-      );
-
-      setMessagesList(newMessagesList);
+      setMessagesList((prevMessages) => [...prevMessages, newMessage]);
     });
 
     // Se desuscribe cuando se desmonta el componente
@@ -147,6 +154,8 @@ const Chat = ({
             text={message.text}
             profile_photo={profile_photo}
             user={username}
+            createdAt={message.createdAt}
+            readed={message.readed}
           />
         ))}
         <div ref={messagesEndRef} />

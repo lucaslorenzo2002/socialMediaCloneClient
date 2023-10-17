@@ -107,6 +107,8 @@ const NavBar = () => {
     setInputValue("");
   };
 
+  console.log(isMessagePage);
+
   return (
     <header className="w-full bg-white py-4 px-8 border-b border-gray-200 fixed w-full: top-0 z-10">
       <div className="container mx-auto">
@@ -229,8 +231,8 @@ const NavBar = () => {
             {isMenuOpen && (
               <div
                 className={`absolute right-0 ${
-                  isMessagePage ? "top" : "bottom"
-                }-[calc(100%+0.5rem)] bg-white border border-gray-300 rounded-md p-2 mt-2`}
+                  isMessagePage ? "top-[calc(100%+.5rem)]" : "bottom-[calc(100%+.5rem)]"
+                } bg-white border border-gray-300 rounded-md p-2 mt-2`}
               >
                 <Link to="/login" className="block mb-2 text-red-500 text-xl">
                   Log out
