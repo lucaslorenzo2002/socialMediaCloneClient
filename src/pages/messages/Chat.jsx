@@ -28,7 +28,7 @@ const Chat = ({
   };
 
   useEffect(() => {
-    socket.emit("join chat", 1);
+    socket.emit("join chat", chatId);
     console.log(chatId);
   }, [chatId]);
 

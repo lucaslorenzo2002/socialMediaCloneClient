@@ -27,6 +27,7 @@ const Messages = ({ socket }) => {
         }
       )
       .then((response) => {
+        console.log(response.data.data);
         setChats(response.data.data);
       })
       .catch((error) => {
@@ -94,7 +95,7 @@ const Messages = ({ socket }) => {
         {!isChatListVisible && selectedChat && (
           <div className="flex-1">
             <Chat
-              chatId={selectedChat.id}
+              chatId={selectedChat.chat_id}
               fullname={selectedChat.full_name}
               username={selectedChat.username}
               profile_photo={selectedChat.profilePhoto}
