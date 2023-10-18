@@ -12,11 +12,21 @@ const Chat = ({
   fullname,
   profile_photo = "/defaultProfileImg.png",
   chatId,
+  userId,
 }) => {
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState([]);
+  const [isOnline, setIsOnline] = useState(false);
   const user = useSelector((state) => state.user);
   const messagesEndRef = useRef(null);
+
+
+  useEffect(() => {
+    socket.on("get user", (user) => {
+      setIsOnline(user.online);
+    }),
+      [];
+  });
 
   const sendMessage = () => {
     // Manda mensaje al server
@@ -29,7 +39,6 @@ const Chat = ({
 
   useEffect(() => {
     socket.emit("join chat", chatId);
-    console.log(chatId);
   }, [chatId]);
 
   useEffect(() => {
@@ -39,7 +48,9 @@ const Chat = ({
         isOwnMessage: message.user_id === user.id,
         createdAt: message.createdAt,
         readed: message.readed,
+        userId: message.user_id,
       }));
+
       setMessagesList(newMessagesList);
     });
 
@@ -49,19 +60,14 @@ const Chat = ({
   }, [messagesList]);
 
   useEffect(() => {
-    console.log(messagesList);
-  }, [messagesList]);
-
-  useEffect(() => {
     // Suscribe a get new message
     socket.on("get new message", (msg) => {
-      console.log(messagesList);
-      console.log(msg);
+      if (msg.newMessage.chat_id !== chatId) return;
       const newMessage = {
-        text: msg.message,
-        isOwnMessage: msg.user_id === user.id,
-        createdAt: msg.createdAt,
-        readed: msg.readed,
+        text: msg.newMessage.message,
+        isOwnMessage: msg.newMessage.user_id === user.id,
+        createdAt: msg.newMessage.createdAt,
+        readed: msg.newMessage.readed,
       };
 
       setMessagesList((prevMessages) => [...prevMessages, newMessage]);
@@ -125,7 +131,7 @@ const Chat = ({
       <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
         <div className="relative flex items-center space-x-2 mx-auto md:mx-0">
           <div className="relative scale-75">
-            <span className="absolute text-green-500 right-0 bottom-0">
+            <span className={`absolute ${isOnline ? "text-green-500" : "text-gray-400"} right-0 bottom-0`}>
               <svg width={20} height={20}>
                 <circle cx={8} cy={8} r={8} fill="currentColor" />
               </svg>
@@ -147,6 +153,7 @@ const Chat = ({
         id="messages"
         className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
       >
+
         {messagesList.map((message, index) => (
           <ChatMessage
             key={index}

@@ -6,7 +6,7 @@ const ChatMessage = ({
   user,
   isOwnMessage,
   createdAt,
-  readed = false,
+  readed,
 }) => {
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);

@@ -7,9 +7,10 @@ import CONFIG from "../../constants/config";
 import FollowBtn from "../../components/followBtn/FollowBtn";
 import TweetContainer from "../../components/tweetContainer/TweetContainer";
 
-const Profile = ({socket}) => {
+const Profile = ({ socket }) => {
   const [profileData, setProfileData] = useState(null);
   const [followers, setFollowers] = useState(0);
+  const [isOnline, setIsOnline] = useState(false);
 
   const { id } = useParams();
   const user = useSelector((state) => state.user);
@@ -18,10 +19,15 @@ const Profile = ({socket}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    socket.on("user", user => {
-      console.log(user);
-    })
-  },[])
+    socket.emit("get user id", id);
+  }, [id]);
+
+  useEffect(() => {
+    socket.on("get user", (user) => {
+      setIsOnline(user.online);
+    }),
+      [];
+  });
 
   useEffect(() => {
     axios
@@ -83,23 +89,34 @@ const Profile = ({socket}) => {
   };
   const handleCreateChat = () => {
     axios
-      .post(`${CONFIG.BASE_URL}/crearchat/${profileData?.id}`,{}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .post(
+        `${CONFIG.BASE_URL}/crearchat/${profileData?.id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
-        navigate("/messages")
+        navigate("/messages");
         console.log(response);
       });
   };
   return (
     <div className="flex flex-col items-center p-8 bg-white min-h-screen">
-      <img
-        src={profileData?.profile_photo || "/defaultProfileImg.png"}
-        alt={`${profileData?.full_name}'s profile`}
-        className="rounded-full w-32 h-32 border-4 border-gray-300"
-      />
+      <div className="relative rounded-full w-32 h-32">
+        <img
+          src={profileData?.profile_photo || "/defaultProfileImg.png"}
+          alt={`${profileData?.full_name}'s profile`}
+          className="border-4 border-gray-300 rounded-full"
+        />
+        <div
+          className={`w-5 h-5 rounded-full ${
+            isOnline ? "bg-green-500" : "bg-gray-400"
+          }  absolute bottom-2 right-3`}
+        ></div>
+      </div>
       <div className="flex flex-col items-center">
         <h1 className="text-2xl font-bold mt-4">{profileData?.full_name}</h1>
         <p className="text-gray-500">{profileData?.username}</p>

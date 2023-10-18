@@ -42,7 +42,6 @@ const Layout = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
 
-
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -106,7 +105,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
-              <Route path="/profile/:id" element={<Profile socket={socket} />} />
+              <Route
+                path="/profile/:id"
+                element={<Profile socket={socket} />}
+              />
               <Route path="/explore" element={<Explore />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/saved" element={<Saved />} />

@@ -27,7 +27,6 @@ const Messages = ({ socket }) => {
         }
       )
       .then((response) => {
-        console.log(response.data.data);
         setChats(response.data.data);
       })
       .catch((error) => {
@@ -36,6 +35,8 @@ const Messages = ({ socket }) => {
   }, []);
 
   const openChat = (chat) => {
+    socket.emit("get user id", chat.id);
+
     setSelectedChat(chat);
   };
 
@@ -83,9 +84,16 @@ const Messages = ({ socket }) => {
                 alt={chat.full_name}
                 className="w-10 h-10 rounded-full mr-3"
               />
-              <div>
+              <div className="w-full overflow-hidden">
                 <div className="font-semibold">{chat.full_name}</div>
-                <div className="text-sm text-gray-600">{chat.username}</div>
+                <div className="text-xs text-gray-600">{chat.username}</div>
+                <p
+                  className={`text-sm w-full max-w-full truncate whitespace-nowrap ${
+                    chat.lastMessage.readed ? "font-normal" : "font-normal"
+                  }`}
+                >
+                  {chat.lastMessage.message}
+                </p>
               </div>
             </div>
           ))}

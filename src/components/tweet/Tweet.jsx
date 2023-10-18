@@ -38,7 +38,6 @@ const Tweet = ({
   isUserProfile = false,
   file,
 }) => {
-  console.log(file);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [localCommentCount, setLocalCommentCount] = useState(comments.length);
   const [localLikesCount, setLocalLikesCount] = useState(likes.length);

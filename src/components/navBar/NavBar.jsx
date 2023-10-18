@@ -86,7 +86,6 @@ const NavBar = () => {
       }));
 
       setAllUsers(usersData);
-      console.log(usersData);
     } catch (error) {
       console.error(error);
     }
@@ -107,7 +106,6 @@ const NavBar = () => {
     setInputValue("");
   };
 
-  console.log(isMessagePage);
 
   return (
     <header className="w-full bg-white py-4 px-8 border-b border-gray-200 fixed w-full: top-0 z-10">

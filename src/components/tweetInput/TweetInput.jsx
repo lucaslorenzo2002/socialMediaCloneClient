@@ -137,7 +137,6 @@ const TweetInput = ({
 
       setAllUsers(usersData);
 
-      console.log(usersData);
     } catch (error) {
       console.error(error);
     }
