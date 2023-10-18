@@ -17,22 +17,49 @@ const Messages = ({ socket }) => {
 
   useEffect(() => {
     axios
-      .get(
-        `${CONFIG.BASE_URL}/mischats`,
-
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .get(`${CONFIG.BASE_URL}/mischats`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
-        setChats(response.data.data);
+        const data = response.data.data;
+        const newChatList = data.map((chat) => ({
+          ...chat,
+          lastMessage: {
+            message: "test",
+            readed: false,
+          },
+        }));
+        setChats(newChatList);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
   }, []);
+
+ /*  useEffect(() => {
+    socket.on("get new message", (msg) => {
+      console.log(msg.chatId, msg.newMessage);
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat.chat_id === msg.chatId
+            ? {
+                ...chat,
+                lastMessage: {
+                  message: msg.newMessage.message,
+                  readed: msg.newMessage.readed,
+                },
+              }
+            : chat
+        )
+      );
+    });
+
+    return () => {
+      socket.off("get new message");
+    };
+  }, []); */
 
   const openChat = (chat) => {
     socket.emit("get user id", chat.id);
@@ -89,10 +116,10 @@ const Messages = ({ socket }) => {
                 <div className="text-xs text-gray-600">{chat.username}</div>
                 <p
                   className={`text-sm w-full max-w-full truncate whitespace-nowrap ${
-                    chat.lastMessage.readed ? "font-normal" : "font-normal"
+                    chat.lastMessage?.readed ? "font-bold" : "font-normal"
                   }`}
                 >
-                  {chat.lastMessage.message}
+                  {chat.lastMessage?.message}
                 </p>
               </div>
             </div>

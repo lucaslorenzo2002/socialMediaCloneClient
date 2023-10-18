@@ -58,15 +58,15 @@ const TweetInput = ({
 
   const handleTweet = () => {
     if (!isComment) {
-      const data = {
-        text: input,
-        file: fileState,
-      };
+      const formData = new FormData();
+      formData.append("file", fileState);
+      formData.append("text", input);
+
+      console.log(formData);
 
       axios
-        .post(`${CONFIG.BASE_URL}/crearpost`, data, {
+        .post(`${CONFIG.BASE_URL}/crearpost`, formData, {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
@@ -136,7 +136,6 @@ const TweetInput = ({
       }));
 
       setAllUsers(usersData);
-
     } catch (error) {
       console.error(error);
     }
