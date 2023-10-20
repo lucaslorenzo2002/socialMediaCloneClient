@@ -106,7 +106,7 @@ const EditProfile = () => {
 
   return (
     <div className="flex flex-col items-center p-8 bg-white min-h-screen">
-      <div className="mb-8">
+      <div className="mb-8 flex flex-col justify-center items-center">
         <img
           src={
             profileData?.profile_photo ||
@@ -116,10 +116,30 @@ const EditProfile = () => {
           alt={`${profileData?.full_name}'s profile`}
           className="rounded-full object-cover w-32 h-32 border-4 border-gray-300 mb-4"
         />
-        <label className="block text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-          Subir Foto
-          <input type="file" className="hidden" onChange={handleImageUpload} />
-        </label>
+        <div className="flex flex-col md:flex-row gap-5">
+          <label className="block text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+            Subir Foto
+            <input
+              type="file"
+              className="hidden"
+              onChange={handleImageUpload}
+            />
+          </label>
+
+          <button
+            className="block text-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+            type="button"
+            onClick={() => {
+              setProfilePhoto(null);
+              setProfileData((prevData) => ({
+                ...prevData,
+                profile_photo: null,
+              }));
+            }}
+          >
+            Eliminar
+          </button>
+        </div>
       </div>
       <input
         type="text"
