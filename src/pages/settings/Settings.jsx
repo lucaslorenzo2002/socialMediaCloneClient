@@ -12,7 +12,6 @@ const EditProfile = () => {
   const token = useSelector((state) => state.token);
 
   useEffect(() => {
-    // Carga inicial del perfil
     axios
       .get(`${CONFIG.BASE_URL}/perfilusuario/${user.id}`, {
         headers: {
@@ -32,15 +31,28 @@ const EditProfile = () => {
     setProfileData((prevData) => ({ ...prevData, [name]: "@" + value }));
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePhoto(file); // Set the file object directly
+    }
+  };
+
   const handleSubmit = () => {
     const formData = new FormData();
 
     formData.append("username", profileData.username);
     formData.append("fullName", profileData.full_name);
     formData.append("bio", profileData.bio);
+    formData.append("dayOfBirth", profileData.birth_of_day);
 
     if (profilePhoto) {
-      formData.append("files", profilePhoto);
+      formData.append("file", profilePhoto);
+  }
+
+    // Log form data before sending to help with debugging
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
     }
 
     axios
@@ -70,25 +82,9 @@ const EditProfile = () => {
     setProfileData((prevData) => ({ ...prevData, bio: value }));
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    console.log("File:", file);
-
-    if (file) {
-      const reader = new FileReader();
-
-      reader.onload = function (event) {
-        // El resultado contiene la imagen en formato base64
-        setProfilePhoto(event.target.result);
-      };
-
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleBirthdayChange = (event) => {
     const { value } = event.target;
-    setProfileData((prevData) => ({ ...prevData, birthday: value }));
+    setProfileData((prevData) => ({ ...prevData, birth_of_day: value }));
   };
 
   return (
@@ -131,7 +127,7 @@ const EditProfile = () => {
       <input
         type="date"
         name="birthday"
-        value={profileData.birthday || ""}
+        value={profileData.birth_of_day || ""}
         onChange={handleBirthdayChange}
         placeholder="Birthday"
         className="border border-gray-300 p-2 mb-4 w-full rounded"

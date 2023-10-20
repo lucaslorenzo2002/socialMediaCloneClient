@@ -103,13 +103,14 @@ const Profile = ({ socket }) => {
         console.log(response);
       });
   };
+
   return (
     <div className="flex flex-col items-center p-8 bg-white min-h-screen">
       <div className="relative rounded-full w-32 h-32">
         <img
           src={profileData?.profile_photo || "/defaultProfileImg.png"}
           alt={`${profileData?.full_name}'s profile`}
-          className="border-4 border-gray-300 rounded-full"
+          className="border-4 border-gray-300 rounded-full w-32 h-32 object-cover"
         />
         <div
           className={`w-5 h-5 rounded-full ${
@@ -120,6 +121,7 @@ const Profile = ({ socket }) => {
       <div className="flex flex-col items-center">
         <h1 className="text-2xl font-bold mt-4">{profileData?.full_name}</h1>
         <p className="text-gray-500">{profileData?.username}</p>
+        <p className="text-gray-500 text-base">{profileData?.bio || ""}</p>
       </div>
       <div className="flex gap-2">
         {profileData?.id !== user.id && (
