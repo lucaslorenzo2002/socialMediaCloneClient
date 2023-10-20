@@ -25,6 +25,7 @@ const ModalTweet = ({
   isRetweeted,
   onToggleSave,
   isSavedParam,
+  file,
 }) => {
   if (!isOpen) return null;
   const [localRetweets, setLocalRetweets] = useState(retweets.length);
@@ -84,6 +85,7 @@ const ModalTweet = ({
     setIsSaved(!isSaved);
     onToggleSave();
   };
+
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-start pt-20 z-50">
       <div className="bg-white w-full md:w-1/2 xl:w-1/3 md:max-h-[70vh] rounded-lg overflow-y-auto shadow-lg">
@@ -112,6 +114,7 @@ const ModalTweet = ({
                 <span className="text-gray-500">{tweet.user}</span>
               </div>
               <p>{renderContent(tweet.content)}</p>
+              {file && <img src={file} alt={tweet.content + "Image"} className="rounded-md" />}
             </div>
           </div>
         </div>

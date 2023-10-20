@@ -64,7 +64,17 @@ const TweetContainer = ({ tweets = [], isUserProfile }) => {
     });
   };
 
-  const uniqueTweets = filterUniqueRetweets(tweets);
+  // Función para ordenar los tweets por fecha de creación en orden descendente
+  const sortByNewest = (a, b) => {
+    const dateA = new Date(a.created_at);
+    const dateB = new Date(b.created_at);
+    return dateB - dateA;
+  };
+
+  // Ordena los tweets antes de renderizarlos
+  const sortedTweets = tweets.sort(sortByNewest);
+
+  const uniqueTweets = filterUniqueRetweets(sortedTweets);
 
   if (tweets.length === 0)
     return (

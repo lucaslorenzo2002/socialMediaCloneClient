@@ -395,6 +395,7 @@ const Tweet = ({
         isRetweeted={isRetweetedState}
         onToggleSave={handleSave}
         isSavedParam={isSaved}
+        file={file}
       />
     </>
   );
