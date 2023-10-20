@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../redux/userSlice";
 import axios from "axios";
 import CONFIG from "../../constants/config";
 import toast from "react-hot-toast";
@@ -8,6 +9,8 @@ import { format } from "date-fns";
 const EditProfile = () => {
   const [profileData, setProfileData] = useState({});
   const [profilePhoto, setProfilePhoto] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const today = format(new Date(), "yyyy-MM-dd");
 
@@ -50,13 +53,14 @@ const EditProfile = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     try {
       const formData = new FormData();
 
       formData.append("username", profileData.username);
       formData.append("fullName", profileData.full_name);
       formData.append("bio", profileData.bio);
-      formData.append("dayOfBirth", profileData.birth_of_day || today); // Usa la fecha actual si birth_of_day está vacío
+      formData.append("dayOfBirth", profileData.birth_of_day || today);
 
       if (profilePhoto) {
         formData.append("file", profilePhoto);
@@ -72,8 +76,15 @@ const EditProfile = () => {
           },
         }
       );
-      if (response.data.success) toast.success("Usuario actualizado");
+      if (response.data.success) {
+        toast.success("Usuario actualizado");
+        setIsLoading(false);
+        console.log(response.data);
+        dispatch(setUser(response.data.user || user));
+      }
     } catch (e) {
+      toast.error("Error al actualizar datos");
+      setIsLoading(false);
       console.log(e);
     }
   };
@@ -105,8 +116,8 @@ const EditProfile = () => {
           alt={`${profileData?.full_name}'s profile`}
           className="rounded-full object-cover w-32 h-32 border-4 border-gray-300 mb-4"
         />
-        <label className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-          Change Photo
+        <label className="block text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+          Subir Foto
           <input type="file" className="hidden" onChange={handleImageUpload} />
         </label>
       </div>
@@ -153,7 +164,7 @@ const EditProfile = () => {
         onClick={handleSubmit}
         className="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full"
       >
-        Save Changes
+        {!isLoading ? "Guardar Cambios" : "Cargando..."}
       </button>
     </div>
   );

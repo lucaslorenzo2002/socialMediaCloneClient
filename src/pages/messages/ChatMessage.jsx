@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 const ChatMessage = ({
   text,
@@ -13,6 +14,8 @@ const ChatMessage = ({
     return `${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
   };
 
+  const globalUser = useSelector((state) => state.user);
+
   if (isOwnMessage) {
     return (
       <div className="chat-message">
@@ -26,14 +29,16 @@ const ChatMessage = ({
             <div className="text-xs">
               <span className="text-gray-500">{formatDate(createdAt)} </span>
               {readed ? (
-                <span className="mx-1 !text-blue-500 font-bold tracking-[-0.3rem]">✓✓</span>
+                <span className="mx-1 !text-blue-500 font-bold tracking-[-0.3rem]">
+                  ✓✓
+                </span>
               ) : (
                 <span className="mx-1 font-bold tracking-[-0.3rem]">✓</span>
               )}
             </div>
           </div>
           <img
-            src={profile_photo}
+            src={globalUser.profile_photo}
             alt="My profile"
             className="w-8 h-8 rounded-full order-2"
           />

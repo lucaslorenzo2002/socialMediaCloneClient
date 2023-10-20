@@ -88,7 +88,8 @@ const Chat = ({
 
   useEffect(() => {
     socket.on("is typing", ({ chatId: chat_id }) => {
-      if(chat_id !== chatId) return;
+      if (chat_id !== chatId) return;
+      scrollToBottom();
       setIsTyping(true);
       setTimeout(() => {
         setIsTyping(false);
@@ -186,8 +187,8 @@ const Chat = ({
             readed={message.readed}
           />
         ))}
-        <div ref={messagesEndRef} />
         {isTyping && <p className="text-gray-400 text-sm">Escribiendo...</p>}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
