@@ -11,16 +11,19 @@ const SidebarLeft = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(removeToken());
-    dispatch(removeUser())
+    dispatch(removeUser());
     toast.success("Sesión cerrada correctamente.");
   };
 
   const user = useSelector((state) => state.user);
-  console.log(user);
+
   return (
     <div>
       {/* Perfil de usuario */}
-      <Link to={`/profile/${user.id}`} className="flex items-center p-4 space-x-2 cursor-pointer hover:bg-gray-100 rounded-lg">
+      <Link
+        to={`/profile/${user.id}`}
+        className="flex items-center p-4 space-x-2 cursor-pointer hover:bg-gray-100 rounded-lg"
+      >
         <img
           src={
             user.profile_photo ? user.profile_photo : "/defaultProfileImg.png"

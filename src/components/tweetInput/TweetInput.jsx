@@ -6,7 +6,6 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import axios from "axios";
 import "./TweetInput.css";
-import { useDispatch } from "react-redux";
 
 import CONFIG from "../../constants/config";
 import { toast } from "react-hot-toast";
@@ -147,11 +146,11 @@ const TweetInput = ({
 
   return (
     <div className={`border-b border-slate-100 p-3 flex space-x-3 mt-1`}>
-      <Link to={`/profile/${user.id}`} className="h-11 w-11">
+      <Link to={`/profile/${user.id}`} className="w-fit h-fit object-cover">
         <img
           src={user.profile_photo || "/defaultProfileImg.png"}
           alt="Profile Pic"
-          className="rounded-full"
+          className="rounded-full object-cover w-11 aspect-square"
         />
       </Link>
       <div className="w-full divide-y divide-slate-100">

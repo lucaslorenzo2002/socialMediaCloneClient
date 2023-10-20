@@ -3,10 +3,13 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import CONFIG from "../../constants/config";
 import toast from "react-hot-toast";
+import { format } from "date-fns";
 
 const EditProfile = () => {
   const [profileData, setProfileData] = useState({});
   const [profilePhoto, setProfilePhoto] = useState(null);
+
+  const today = format(new Date(), "yyyy-MM-dd");
 
   const user = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -35,41 +38,44 @@ const EditProfile = () => {
     const file = e.target.files[0];
     if (file) {
       setProfilePhoto(file); // Set the file object directly
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileData((prevData) => ({
+          ...prevData,
+          profile_photo: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = () => {
-    const formData = new FormData();
+  const handleSubmit = async () => {
+    try {
+      const formData = new FormData();
 
-    formData.append("username", profileData.username);
-    formData.append("fullName", profileData.full_name);
-    formData.append("bio", profileData.bio);
-    formData.append("dayOfBirth", profileData.birth_of_day);
+      formData.append("username", profileData.username);
+      formData.append("fullName", profileData.full_name);
+      formData.append("bio", profileData.bio);
+      formData.append("dayOfBirth", profileData.birth_of_day || today); // Usa la fecha actual si birth_of_day está vacío
 
-    if (profilePhoto) {
-      formData.append("file", profilePhoto);
-  }
+      if (profilePhoto) {
+        formData.append("file", profilePhoto);
+      }
 
-    // Log form data before sending to help with debugging
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
+      const response = await axios.post(
+        `${CONFIG.BASE_URL}/actualizarperfil`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (response.data.success) toast.success("Usuario actualizado");
+    } catch (e) {
+      console.log(e);
     }
-
-    axios
-      .post(`${CONFIG.BASE_URL}/actualizarperfil`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log("Perfil actualizado con éxito:", response.data);
-        toast.success("Profile updated successfully");
-      })
-      .catch((error) => {
-        toast.error("Error updating profile");
-        console.error("Error actualizando perfil:", error);
-      });
   };
 
   const handleNameChange = (event) => {
@@ -127,7 +133,7 @@ const EditProfile = () => {
       <input
         type="date"
         name="birthday"
-        value={profileData.birth_of_day || ""}
+        value={profileData.birth_of_day || today}
         onChange={handleBirthdayChange}
         placeholder="Birthday"
         className="border border-gray-300 p-2 mb-4 w-full rounded"

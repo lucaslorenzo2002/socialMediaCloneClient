@@ -31,6 +31,7 @@ const Messages = ({ socket }) => {
             readed: false,
           },
         }));
+        console.log(newChatList);
         setChats(newChatList);
       })
       .catch((error) => {
@@ -38,34 +39,13 @@ const Messages = ({ socket }) => {
       });
   }, []);
 
- /*  useEffect(() => {
-    socket.on("get new message", (msg) => {
-      console.log(msg.chatId, msg.newMessage);
-      setChats((prevChats) =>
-        prevChats.map((chat) =>
-          chat.chat_id === msg.chatId
-            ? {
-                ...chat,
-                lastMessage: {
-                  message: msg.newMessage.message,
-                  readed: msg.newMessage.readed,
-                },
-              }
-            : chat
-        )
-      );
-    });
-
-    return () => {
-      socket.off("get new message");
-    };
-  }, []); */
-
   const openChat = (chat) => {
     socket.emit("get user id", chat.id);
 
     setSelectedChat(chat);
   };
+
+
 
   return (
     <>
@@ -107,9 +87,9 @@ const Messages = ({ socket }) => {
               className="flex items-center p-4 border-b cursor-pointer hover:bg-gray-100"
             >
               <img
-                src={chat.profilePhoto || "/defaultProfileImg.png"}
+                src={chat.profile_photo || "/defaultProfileImg.png"}
                 alt={chat.full_name}
-                className="w-10 h-10 rounded-full mr-3"
+                className="w-10 aspect-square object-cover rounded-full mr-3"
               />
               <div className="w-full overflow-hidden">
                 <div className="font-semibold">{chat.full_name}</div>
@@ -133,7 +113,7 @@ const Messages = ({ socket }) => {
               chatId={selectedChat.chat_id}
               fullname={selectedChat.full_name}
               username={selectedChat.username}
-              profile_photo={selectedChat.profilePhoto}
+              profile_photo={selectedChat.profile_photo}
               socket={socket}
             />
           </div>
