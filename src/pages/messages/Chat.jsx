@@ -73,7 +73,6 @@ const Chat = ({
       setMessagesList((prevMessages) => [...prevMessages, newMessage]);
     });
 
-    // Se desuscribe cuando se desmonta el componente
     return () => {
       socket.off("get new message");
     };

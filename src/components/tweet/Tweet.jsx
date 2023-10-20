@@ -165,7 +165,49 @@ const Tweet = ({
   };
 
   const handleSave = () => {
-    setIsSaved(!isSaved);
+    if (!isSaved) {
+      axios
+        .post(
+          `${CONFIG.BASE_URL}/agregaraguardados/${tweetId}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+          setIsSaved(!isSaved);
+          toast.success("Tweet guardado con éxito");
+        })
+        .catch((e) => {
+          console.log(e);
+          toast.error("Error al Likear Tweet");
+          return;
+        });
+    } else {
+      axios
+        .post(
+          `${CONFIG.BASE_URL}/eliminardeguardados/${tweetId}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+          setIsSaved(!isSaved);
+          toast.success("Tweet eliminado de guardados con éxito");
+        })
+        .catch((e) => {
+          console.log(e);
+          toast.error("Error al eliminar Tweet de guardados");
+          return;
+        });
+    }
   };
 
   const openModal = () => {

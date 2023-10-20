@@ -90,9 +90,9 @@ const TweetContainer = ({ tweets = [], isUserProfile }) => {
         const currentTweet = isRetweet ? tweet.Post : tweet;
         return (
           <Tweet
-            isSavedParam={tweet.SavedPostsLists?.some((save) => {
-              save.save_id === user.id;
-            })}
+            isSavedParam={tweet.SavedPostsLists?.some(
+              (save) => save.user_id === user.id
+            )}
             retweetUser={isRetweet ? tweet.User?.username : null}
             retweetUserId={isRetweet ? tweet.User?.id : null}
             tweetId={currentTweet.id}

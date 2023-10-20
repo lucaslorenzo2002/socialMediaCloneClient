@@ -16,31 +16,31 @@ const Saved = () => {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        if (
-          response &&
-          response.data &&
-          response.data[0] &&
-          response.data[0].Posts
-        ) {
-          setSavedTweets(response.data[0].Posts);
+        if (response.data.success) {
+          // Check for success flag in response
+          // Extract the posts from the response data
+          const posts = response.data.data[0].Posts;
+          setSavedTweets(posts);
         } else {
-          console.log("No hay tweets guardados");
+          console.log("No se pudo cargar los tweets guardados");
           setSavedTweets([]); // or handle this scenario accordingly
         }
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [token]); // Add token as a dependency
 
+  console.log(savedTweets);
   return (
     <div className="min-h-screen">
       <h2 className="text-2xl font-bold my-5 text-center">Guardados</h2>
       {/* Lista de tweets guardados */}
       <div className="bg-white p-6 gap-2">
         {savedTweets.length === 0 && (
-          <p className="text-center text-slate-400">No tienes ningún tweet guardados</p>
+          <p className="text-center text-slate-400">
+            No tienes ningún tweet guardados
+          </p>
         )}
         {savedTweets.map((tweet) => (
           <TweetGuardado
@@ -48,8 +48,9 @@ const Saved = () => {
             user={tweet.User.full_name}
             username={tweet.User.username}
             tweetId={tweet.id}
-            userId={tweet.User.id}
-            content={tweet.content}
+            userId={tweet.user_id}
+            content={tweet.text}
+            file={tweet.file}
           />
         ))}
       </div>
