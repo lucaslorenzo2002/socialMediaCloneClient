@@ -1,25 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import TwitterNotification from "../../components/twitterNotification/TweeterNotification";
 import CONFIG from "../../constants/config";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import {
-  fetchError,
-  fetchStart,
-  fetchSuccess,
-} from "../../redux/notificationsSlice";
+
 import NotificationContainer from "../../components/notificationContainer/NotificationContainer";
 
 const Notificatons = () => {
-  const dispatch = useDispatch();
-
-  const notifications = useSelector(
-    (state) => state.notifications.notifications
-  );
-
   const token = useSelector((state) => state.token);
 
+  const [notifications, setNotifications] = useState([]);
   const [activeTab, setActiveTab] = useState("Todas");
   const tabs = ["Todas", "Retweets", "Menciones", "Likes"];
   const [lineStyles, setLineStyles] = useState({});
@@ -31,29 +21,21 @@ const Notificatons = () => {
     return null;
   }
 
-  const api = axios.create({
-    baseURL: CONFIG.BASE_URL,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
   useEffect(() => {
-    const fetchData = async () => {
-      // Check if notifications are already in the Redux state.
-      if (notifications && notifications.length) return;
-
-      // Fetch notifications from the server.
-      dispatch(fetchStart());
-      try {
-        const response = await api.get("/notificaciones");
-        dispatch(fetchSuccess(response.data.data));
-      } catch (err) {
-        dispatch(fetchError(err.message));
-      }
-    };
-    fetchData();
-  }, [token, dispatch, notifications]);
+    axios
+      .get(`${CONFIG.BASE_URL}/notificaciones/others`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Notifications:", response);
+        setNotifications(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching notifications:", error);
+      });
+  }, []);
 
   useEffect(() => {
     const activeButton = buttonsRef.current.find(
@@ -104,16 +86,13 @@ const Notificatons = () => {
       )}
       {activeTab === "Retweets" && (
         <NotificationContainer
-          notis={filterNotificationsByType(notifications, "comentario!")}
+          notis={filterNotificationsByType(notifications, "retweets")}
           altText="No hay retweets disponibles."
         />
       )}
       {activeTab === "Menciones" && (
         <NotificationContainer
-          notis={filterNotificationsByType(
-            notifications,
-            "mention"
-          )}
+          notis={filterNotificationsByType(notifications, "mention")}
           altText="No hay menciones disponibles."
         />
       )}
