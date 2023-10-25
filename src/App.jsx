@@ -29,6 +29,7 @@ import SidebarLeft from "./components/sidebarLeft/SidebarLeft";
 import Messages from "./pages/messages/Messages";
 import Settings from "./pages/settings/Settings";
 import EmailConfirm from "./pages/emailConfirm/emailConfirm";
+import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
 
 const token = localStorage.getItem("token");
 
@@ -115,10 +116,11 @@ function App() {
               <Route path="/settings" element={<Settings />} />
             </Route>
             <Route path="/messages" element={<Messages socket={socket} />} />
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<RegisterPage />} />
-            <Route path="*" element={<Error />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<RegisterPage />} />
+            <Route path="/forgotPassword" element={<ForgotPassword />} />
             <Route path="/emailConfirmation" element={<EmailConfirm />} />
+            <Route path="*" element={<Error />} />
           </Routes>
         </Router>
       </Provider>

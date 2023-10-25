@@ -80,7 +80,8 @@ const EditProfile = () => {
         toast.success("Usuario actualizado");
         setIsLoading(false);
         console.log(response.data);
-        dispatch(setUser(response.data.user || user));
+
+        dispatch(setUser(response.data.newUser || user));
       }
     } catch (e) {
       toast.error("Error al actualizar datos");

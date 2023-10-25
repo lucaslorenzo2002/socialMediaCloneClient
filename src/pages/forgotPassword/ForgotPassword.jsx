@@ -1,48 +1,39 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import React, { useState } from "react";
 import CONFIG from "../../constants/config";
-import { useDispatch, useSelector } from "react-redux";
-import { setToken } from "../../redux/tokenSlice";
-import { setUser } from "../../redux/userSlice";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 
-const LoginPage = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
-
+const ForgotPassword = () => {
+  const [formData, setFormData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    axios
+      .post(`${CONFIG.BASE_URL}/resetpasswordrequest`, formData)
+      .then((res) => {
+        console.log(res);
+        setIsLoading(false);
+        if (res.data.success) {
+          toast.success(res.data.message);
+        } else {
+          toast.error(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.response.data.message);
 
-    try {
-      const response = await axios.post(`${CONFIG.BASE_URL}/login`, formData);
-      localStorage.setItem("token", response.data.token);
-      dispatch(setToken(response.data.token));
-      dispatch(setUser(response.data.user));
-      navigate("/");
-      setIsLoading(false);
-    } catch (error) {
-      toast.error("Hubo un error al iniciar sesión");
-      console.error("Hubo un error al registrar:", error);
-      setIsLoading(false);
-    }
+        setIsLoading(false);
+      });
   };
 
+  const handleChange = (e) => {
+    setFormData({
+      email: e.target.value,
+    });
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-96">
@@ -54,45 +45,26 @@ const LoginPage = () => {
             className="mx-auto mb-2"
           />
         </div>
-        <h1 className="text-2xl font-bold mb-4">Log in to your account</h1>
+        <h1 className="text-2xl text-center font-bold mb-4">
+          Recuperar contraseña
+        </h1>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label
-              className="block text-sm font-medium mb-2"
-              htmlFor="username"
-            >
-              Username
+            <label className="block text-sm font-medium mb-2" htmlFor="email">
+              Email
             </label>
             <input
-              type="text"
-              id="username"
-              name="username"
+              type="email"
+              id="email"
+              placeholder="Email"
+              name="email"
               onChange={handleChange}
-              value={formData.username}
+              value={formData.email}
               className="p-2 w-full border rounded focus:border-blue-500"
               required
             />
           </div>
-
-          <div className="mb-4">
-            <label
-              className="block text-sm font-medium mb-2"
-              htmlFor="password"
-            >
-              Contraseña
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              onChange={handleChange}
-              value={formData.password}
-              className="p-2 w-full border rounded focus:border-blue-500"
-              required
-            />
-          </div>
-
           <button
             type="submit"
             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
@@ -119,25 +91,13 @@ const LoginPage = () => {
                 <span className="sr-only">Loading...</span>
               </div>
             ) : (
-              "Iniciar sesión"
+              "Enviar"
             )}
           </button>
-          <p className="mt-5">
-            ¿Olvidaste tu contraseña?{" "}
-            <Link className="text-blue-500 hover:text-blue-600" to={"/forgotpassword"}>
-              Haz click aquí
-            </Link>
-          </p>
-          <p className="mt-5">
-            ¿No tienes cuenta?{" "}
-            <Link className="text-blue-500 hover:text-blue-600" to={"/signup"}>
-              Register
-            </Link>
-          </p>
         </form>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default ForgotPassword;
