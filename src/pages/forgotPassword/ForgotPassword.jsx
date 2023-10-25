@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import CONFIG from "../../constants/config";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [formData, setFormData] = useState({});
@@ -94,6 +95,11 @@ const ForgotPassword = () => {
               "Enviar"
             )}
           </button>
+          <p className="mt-5 w-full text-center">
+            <Link className="text-blue-500 text-center hover:text-blue-600" to={"/login"}>
+              Volver al inicio
+            </Link>
+          </p>
         </form>
       </div>
     </div>
