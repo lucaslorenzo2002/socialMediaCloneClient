@@ -146,7 +146,7 @@ const NavBar = () => {
               isMessagePage && "hidden"
             }`}
           >
-            <img src="/twitter-logo.png" alt="Twitter Logo" width={"40px"} />
+            <img src="/twitter-logo.png" alt="Social media Clone Logo" width={"40px"} />
           </div>
 
           {/* Right: Search and Tweet Button */}
