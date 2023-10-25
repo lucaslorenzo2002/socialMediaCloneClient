@@ -3,11 +3,18 @@ import CONFIG from "../../constants/config";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import {
+  fetchStart,
+  fetchSuccess,
+  fetchError,
+} from "../../redux/notificationsSlice";
 
 import NotificationContainer from "../../components/notificationContainer/NotificationContainer";
 
 const Notificatons = () => {
   const token = useSelector((state) => state.token);
+  const dispatch = useDispatch();
 
   const [notifications, setNotifications] = useState([]);
   const [activeTab, setActiveTab] = useState("Todas");
@@ -22,18 +29,23 @@ const Notificatons = () => {
   }
 
   useEffect(() => {
+    dispatch(fetchStart());
+
     axios
-      .get(`${CONFIG.BASE_URL}/notificaciones/others`, {
+      .get(`${CONFIG.BASE_URL}/notificaciones`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        console.log("Notifications:", response);
+        console.log("Notifications:", response.data.data);
         setNotifications(response.data.data);
+        dispatch(fetchSuccess(response.data.data));
       })
       .catch((error) => {
         console.error("Error fetching notifications:", error);
+        dispatch(fetchError(error.message));
+
       });
   }, []);
 
@@ -50,7 +62,6 @@ const Notificatons = () => {
   }, [activeTab, tabs.length]);
 
   const filterNotificationsByType = (notifications, type) => {
-    console.log("notifications:", notifications);
     return notifications.filter((noti) => noti.notification_type === type);
   };
 

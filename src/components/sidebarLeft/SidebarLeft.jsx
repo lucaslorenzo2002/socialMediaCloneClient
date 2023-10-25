@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeToken } from "../../redux/tokenSlice";
 import { toast } from "react-hot-toast";
 import { removeUser } from "../../redux/userSlice";
+import { resetNotifications } from "../../redux/notificationsSlice";
 
 const SidebarLeft = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,7 @@ const SidebarLeft = () => {
     localStorage.removeItem("token");
     dispatch(removeToken());
     dispatch(removeUser());
+    dispatch(resetNotifications());
     toast.success("Sesión cerrada correctamente.");
   };
 

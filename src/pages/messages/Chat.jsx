@@ -38,7 +38,6 @@ const Chat = ({
 
   useEffect(() => {
     socket.emit("join chat", chatId);
-    console.log("join chat", chatId);
   }, [chatId]);
 
   useEffect(() => {
@@ -93,7 +92,7 @@ const Chat = ({
       setIsTyping(true);
       setTimeout(() => {
         setIsTyping(false);
-      }, 2000);
+      }, 5000);
     });
 
     return () => {

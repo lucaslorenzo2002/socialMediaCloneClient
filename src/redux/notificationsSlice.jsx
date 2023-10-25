@@ -1,8 +1,8 @@
 // notificationsSlice.js
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const notificationsSlice = createSlice({
-  name: 'notifications',
+  name: "notifications",
   initialState: {
     notifications: [],
     loading: true,
@@ -22,9 +22,15 @@ export const notificationsSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    resetNotifications: (state) => {
+      state.notifications = [];
+      state.loading = true;
+      state.error = null;
+    },
   },
 });
 
-export const { fetchStart, fetchSuccess, fetchError } = notificationsSlice.actions;
+export const { fetchStart, fetchSuccess, fetchError, resetNotifications } =
+  notificationsSlice.actions;
 
 export default notificationsSlice.reducer;

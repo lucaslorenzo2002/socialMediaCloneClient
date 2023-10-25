@@ -39,6 +39,8 @@ const socket = io("https://socialmediaclone-production-1e63.up.railway.app/", {
   },
 });
 
+
+
 const Layout = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -96,6 +98,13 @@ function App() {
       socket.disconnect();
     };
   }, [token]);
+
+  useEffect(() => {
+    socket.on("users connected", (data) => {
+      console.log(data);
+    });
+    
+  }, []);
 
   return (
     <div className="overflow-x-hidden">
