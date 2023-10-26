@@ -25,7 +25,12 @@ const Profile = ({ socket }) => {
 
   useEffect(() => {
     // Verifica si el id del usuario del perfil está en la lista de usuarios conectados
-    setIsOnline(connectedUsers.some((user) => user.userId === parseInt(id)));
+    console.log(connectedUsers);
+    setIsOnline(
+      connectedUsers
+        ? connectedUsers.some((user) => user.userId === parseInt(id))
+        : false
+    );
   }, [connectedUsers, id]);
 
   useEffect(() => {
