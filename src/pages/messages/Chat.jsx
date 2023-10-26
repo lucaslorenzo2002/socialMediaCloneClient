@@ -8,6 +8,7 @@ import { useRef } from "react";
 
 const Chat = ({
   socket,
+  user_id,
   username,
   fullname,
   profile_photo = "/defaultProfileImg.png",
@@ -15,17 +16,17 @@ const Chat = ({
 }) => {
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState([]);
-  const [isOnline, setIsOnline] = useState(false);
   const user = useSelector((state) => state.user);
   const messagesEndRef = useRef(null);
   const [isTyping, setIsTyping] = useState(false);
+  const connectedUsers = useSelector((state) => state.connectedUsers);
+
+  const [isOnline, setIsOnline] = useState(connectedUsers.some((user) => user.userId === user_id));
 
   useEffect(() => {
-    socket.on("get user", (user) => {
-      setIsOnline(user.online);
-    }),
-      [];
-  });
+    setIsOnline(connectedUsers.some((user) => user.userId === user_id));
+  }, [connectedUsers]);
+
 
   const sendMessage = () => {
     // Manda mensaje al server
@@ -160,6 +161,9 @@ const Chat = ({
             </span>
             <img
               src={profile_photo}
+              onError={(e) => {
+                e.target.src = "/defaultProfileImg.png";
+              }}
               alt={username}
               className="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
             />

@@ -106,6 +106,9 @@ const ModalTweet = ({
             <img
               src={tweet.profile || "/defaultProfileImg.png"}
               alt="User"
+              onError={(e) => {
+                e.target.src = "/defaultProfileImg.png";
+              }}
               className="w-10 h-10 rounded-full"
             />
             <div>

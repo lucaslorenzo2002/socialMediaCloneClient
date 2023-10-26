@@ -39,6 +39,9 @@ const ChatMessage = ({
           </div>
           <img
             src={globalUser.profile_photo}
+            onError={(e) => {
+              e.target.src = "/defaultProfileImg.png";
+            }}
             alt="My profile"
             className="w-8 h-8 rounded-full order-2"
           />
@@ -57,11 +60,13 @@ const ChatMessage = ({
             </div>
             <div className="text-gray-500 text-xs">
               {formatDate(createdAt)}{" "}
-              {readed && <span className="ml-2">✓</span>}
             </div>
           </div>
           <img
             src={profile_photo}
+            onError={(e) => {
+              e.target.src = "/defaultProfileImg.png";
+            }}
             alt={user}
             className="w-8 h-8 rounded-full order-1"
           />

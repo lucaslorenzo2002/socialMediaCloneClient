@@ -75,6 +75,9 @@ const Explore = () => {
               <Link to={`/profile/${user.id}`} className="flex items-center">
                 <img
                   src={user.img || "/defaultProfileImg.png"}
+                  onError={(e) => {
+                    e.target.src = "/defaultProfileImg.png";
+                  }}
                   alt={user.display}
                   className="w-12 h-12 rounded-full mr-4"
                 />

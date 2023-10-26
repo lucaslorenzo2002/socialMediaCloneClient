@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 
 const Messages = ({ socket }) => {
   const token = useSelector((state) => state.token);
+  const connectedUsers = useSelector((state) => state.connectedUsers);
 
   const [isChatListVisible, setIsChatListVisible] = useState(false);
   const [chats, setChats] = useState([]);
@@ -65,7 +66,7 @@ const Messages = ({ socket }) => {
 
         {/* Lista de chats */}
         <div
-          className={`transition-all duration-300 border-r border-slate-200 transform ${
+          className={`transition-all duration-300 border-r border-slate-200 h-full transform ${
             isChatListVisible ? "w-full" : "w-0"
           } overflow-hidden md:w-64`}
         >
@@ -87,21 +88,40 @@ const Messages = ({ socket }) => {
               <img
                 src={chat.profile_photo || "/defaultProfileImg.png"}
                 alt={chat.full_name}
+                onError={(e) => {
+                  e.target.src = "/defaultProfileImg.png";
+                }}
                 className="w-10 aspect-square object-cover rounded-full mr-3"
               />
+
               <div className="w-full overflow-hidden">
                 <div className="font-semibold">{chat.full_name}</div>
-                <div className="text-xs text-gray-600">{chat.username}</div>
+                <div className="flex justify-between">
+                  <div className="text-xs text-gray-600">{chat.username}</div>
+                  <p
+                    className={`text-xs ${
+                      connectedUsers.some((user) => user.userId === chat.id)
+                        ? "text-green-500 font-bold"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    {connectedUsers.some((user) => user.userId === chat.id)
+                      ? "online"
+                      : "offline"}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
         </div>
+        {!selectedChat && <div className="flex-1 text-slate-400 grid place-items-center ">Selecciona un chat</div>}
 
         {/* Chat activo */}
         {!isChatListVisible && selectedChat && (
           <div className="flex-1">
             <Chat
               chatId={selectedChat.chat_id}
+              user_id={selectedChat.id}
               fullname={selectedChat.full_name}
               username={selectedChat.username}
               profile_photo={selectedChat.profile_photo}

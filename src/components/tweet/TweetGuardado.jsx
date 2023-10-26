@@ -70,6 +70,9 @@ const TweetGuardado = ({
         <Link className="object-cover w-14 aspect-square" to={`/profile/${userId}`}>
         <img
           src="/defaultProfileImg.png"
+          onError={(e) => {
+            e.target.src = "/defaultProfileImg.png";
+          }}
           alt="User"
           className="w-12 h-12 rounded-full"
         /></Link>

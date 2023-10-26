@@ -287,6 +287,9 @@ const Tweet = ({
         <Link to={`/profile/${userId}`}>
           <img
             src={profile}
+            onError={(e) => {
+              e.target.src = "/defaultProfileImg.png";
+            }}
             alt={`${fullName}'s profile`}
             className="aspect-square w-12 rounded-full object-cover"
           />

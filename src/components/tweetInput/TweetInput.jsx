@@ -149,6 +149,9 @@ const TweetInput = ({
       <Link to={`/profile/${user.id}`} className="w-fit h-fit object-cover">
         <img
           src={user.profile_photo || "/defaultProfileImg.png"}
+          onError={(e) => {
+            e.target.src = "/defaultProfileImg.png";
+          }}
           alt="Profile Pic"
           className="rounded-full object-cover w-11 aspect-square"
         />

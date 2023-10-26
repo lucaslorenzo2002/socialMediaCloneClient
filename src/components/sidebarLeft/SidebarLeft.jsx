@@ -30,6 +30,9 @@ const SidebarLeft = () => {
           src={
             user.profile_photo ? user.profile_photo : "/defaultProfileImg.png"
           }
+          onError={(e) => {
+            e.target.src = "/defaultProfileImg.png";
+          }}
           alt="Profile Pic"
           width={"40px"}
           className="rounded-full aspect-square w-12 object-cover"
