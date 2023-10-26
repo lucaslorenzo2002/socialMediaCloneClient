@@ -31,17 +31,9 @@ const Home = () => {
         const mergeAndSortByDate = (array1, array2) => {
           const combinedArray = [...array1, ...array2];
           const sortedArray = combinedArray.sort((a, b) => {
-            let dateA = a.created_at || a.retweeted_at;
-            let dateB = b.created_at || b.retweeted_at;
-
-            if (a.retweeted_at) {
-              dateA = a.retweeted_at;
-            }
-
-            if (b.retweeted_at) {
-              dateB = b.retweeted_at;
-            }
-
+            let dateA = a.created_at;
+            let dateB = b.created_at;
+            console.log(dateA, dateB);
             return new Date(dateA) - new Date(dateB);
           });
 
@@ -67,12 +59,7 @@ const Home = () => {
     }
   }, [location]);
 
-
-  return (
-    <div>
-      {isHome ? <TweetContainer tweets={tweets}/> : null}
-    </div>
-  );
+  return <div>{isHome ? <TweetContainer tweets={tweets} /> : null}</div>;
 };
 
 export default Home;

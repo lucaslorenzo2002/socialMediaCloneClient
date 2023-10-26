@@ -8,12 +8,14 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { useEffect } from "react";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { store } from "./redux/store";
 import { useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { useMediaQuery } from "react-responsive";
 import io from "socket.io-client";
+
+import { setConnectedUsers } from "./redux/connectedUsersSlice";
 
 import NavBar from "./components/navBar/NavBar";
 import Home from "./pages/home/Home";
@@ -38,8 +40,6 @@ const socket = io("https://socialmediaclone-production-1e63.up.railway.app/", {
     token: `Bearer ${token}`,
   },
 });
-
-
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -89,6 +89,41 @@ const Layout = () => {
 };
 
 function App() {
+  return (
+    <Provider store={store}>
+      <div className="overflow-x-hidden">
+        <SocketProvider socket={socket}>
+          <Toaster />
+
+          <Router>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route
+                  path="/profile/:id"
+                  element={<Profile socket={socket} />}
+                />
+                <Route path="/explore" element={<Explore />} />
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/saved" element={<Saved />} />
+                <Route path="/settings" element={<Settings />} />
+              </Route>
+              <Route path="/messages" element={<Messages socket={socket} />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<RegisterPage />} />
+              <Route path="/forgotPassword" element={<ForgotPassword />} />
+              <Route path="/emailConfirmation" element={<EmailConfirm />} />
+              <Route path="*" element={<Error />} />
+            </Routes>
+          </Router>
+        </SocketProvider>
+      </div>
+    </Provider>
+  );
+}
+
+const SocketProvider = ({ children, socket }) => {
+  const dispatch = useDispatch();
   useEffect(() => {
     // Conecta con websocket
     socket.connect();
@@ -97,44 +132,16 @@ function App() {
     return () => {
       socket.disconnect();
     };
-  }, [token]);
+  }, [socket]);
 
   useEffect(() => {
     socket.on("users connected", (data) => {
       console.log(data);
+      dispatch(setConnectedUsers(data));
     });
-    
-  }, []);
+  }, [dispatch, socket]);
 
-  return (
-    <div className="overflow-x-hidden">
-      <Provider store={store}>
-        <Toaster />
-
-        <Router>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Home />} />
-              <Route
-                path="/profile/:id"
-                element={<Profile socket={socket} />}
-              />
-              <Route path="/explore" element={<Explore />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/saved" element={<Saved />} />
-              <Route path="/settings" element={<Settings />} />
-            </Route>
-            <Route path="/messages" element={<Messages socket={socket} />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<RegisterPage />} />
-            <Route path="/forgotPassword" element={<ForgotPassword />} />
-            <Route path="/emailConfirmation" element={<EmailConfirm />} />
-            <Route path="*" element={<Error />} />
-          </Routes>
-        </Router>
-      </Provider>
-    </div>
-  );
-}
+  return children;
+};
 
 export default App;

@@ -15,6 +15,7 @@ const Profile = ({ socket }) => {
   const { id } = useParams();
   const user = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
+  const connectedUsers = useSelector((state) => state.connectedUsers);
 
   const navigate = useNavigate();
 
@@ -23,11 +24,9 @@ const Profile = ({ socket }) => {
   }, [id]);
 
   useEffect(() => {
-    socket.on("get user", (user) => {
-      setIsOnline(user.online);
-    }),
-      [];
-  });
+    // Verifica si el id del usuario del perfil está en la lista de usuarios conectados
+    setIsOnline(connectedUsers.some((user) => user.userId === parseInt(id)));
+  }, [connectedUsers, id]);
 
   useEffect(() => {
     axios

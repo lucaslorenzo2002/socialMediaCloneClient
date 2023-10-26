@@ -1,10 +1,10 @@
+// store.js
 import { configureStore } from "@reduxjs/toolkit";
-
 import tokenReducer from "./tokenSlice";
 import userReducer from "./userSlice";
 import notificationsReducer from "./notificationsSlice";
+import connectedUsersReducer from "./connectedUsersSlice"; // Importa el nuevo reducer
 
-// Intenta obtener el estado desde el localStorage
 const preloadedState = localStorage.getItem("reduxState")
   ? JSON.parse(localStorage.getItem("reduxState"))
   : {};
@@ -14,11 +14,11 @@ export const store = configureStore({
     token: tokenReducer,
     user: userReducer,
     notifications: notificationsReducer,
+    connectedUsers: connectedUsersReducer,
   },
-  preloadedState, // Usa el estado obtenido del localStorage (si existe) al inicializar la tienda
+  preloadedState,
 });
 
-// Suscrbe a los cambios de estado y guárdalos en el localStorage
 store.subscribe(() => {
   localStorage.setItem("reduxState", JSON.stringify(store.getState()));
 });

@@ -40,12 +40,28 @@ const Notificatons = () => {
       .then((response) => {
         console.log("Notifications:", response.data.data);
         setNotifications(response.data.data);
-        dispatch(fetchSuccess(response.data.data));
       })
       .catch((error) => {
         console.error("Error fetching notifications:", error);
         dispatch(fetchError(error.message));
+      });
 
+    axios
+      .post(
+        `${CONFIG.BASE_URL}/leerNotificaciones`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log("Leyendo notis:", res.data.data);
+        dispatch(fetchSuccess([]));
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }, []);
 

@@ -14,7 +14,6 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import AddIcon from "@mui/icons-material/Add";
 import { Link, useLocation } from "react-router-dom";
 import CONFIG from "../../constants/config";
 import { Mention, MentionsInput } from "react-mentions";
@@ -23,6 +22,7 @@ const NavBar = () => {
   const location = useLocation();
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [isMessagePage, setIsMessagePage] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     if (location.pathname === "/messages") {
@@ -45,22 +45,7 @@ const NavBar = () => {
   );
 
   const user = useSelector((state) => state.user);
-
-  /*  useEffect(() => {
-    // Si no hay notificaciones y no están en proceso de cargarse, entonces las busca
-    if (reduxNotifications.length === 0 && !loading) {
-      dispatch(fetchStart()); // Indica que empezará la petición
-
-      axios
-        .get(`${CONFIG.BASE_URL}/notificaciones`)
-        .then((response) => {
-          dispatch(fetchSuccess(response.data));
-        })
-        .catch((error) => {
-          dispatch(fetchError("Error fetching notifications"));
-        });
-    }
-  }, [reduxNotifications, loading, dispatch]); */
+  const dispatch = useDispatch();
 
   const [allUsers, setAllUsers] = useState([]); // Obtiene la lista de usuarios del estado global
 
@@ -106,6 +91,25 @@ const NavBar = () => {
     setInputValue("");
   };
 
+  useEffect(() => {
+    dispatch(fetchStart());
+
+    axios
+      .get(`${CONFIG.BASE_URL}/notificaciones`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Notifications:", response.data.data);
+        setNotifications(response.data.data);
+        dispatch(fetchSuccess(response.data.data));
+      })
+      .catch((error) => {
+        console.error("Error fetching notifications:", error);
+        dispatch(fetchError(error.message));
+      });
+  }, []);
 
   return (
     <header className="w-full bg-white py-4 px-8 border-b border-gray-200 fixed w-full: top-0 z-10">
@@ -146,7 +150,11 @@ const NavBar = () => {
               isMessagePage && "hidden"
             }`}
           >
-            <img src="/twitter-logo.png" alt="Social media Clone Logo" width={"40px"} />
+            <img
+              src="/twitter-logo.png"
+              alt="Social media Clone Logo"
+              width={"40px"}
+            />
           </div>
 
           {/* Right: Search and Tweet Button */}
@@ -229,7 +237,9 @@ const NavBar = () => {
             {isMenuOpen && (
               <div
                 className={`absolute right-0 ${
-                  isMessagePage ? "top-[calc(100%+.5rem)]" : "bottom-[calc(100%+.5rem)]"
+                  isMessagePage
+                    ? "top-[calc(100%+.5rem)]"
+                    : "bottom-[calc(100%+.5rem)]"
                 } bg-white border border-gray-300 rounded-md p-2 mt-2`}
               >
                 <Link to="/login" className="block mb-2 text-red-500 text-xl">
