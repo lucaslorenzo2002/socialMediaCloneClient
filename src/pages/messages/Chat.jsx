@@ -39,10 +39,12 @@ const Chat = ({
 
   useEffect(() => {
     socket.emit("join chat", chatId);
+    console.log("join chat", chatId);
   }, [chatId]);
 
   useEffect(() => {
     socket.on("get messages", (messages) => {
+      console.log(messages);
       const newMessagesList = messages.map((message) => ({
         text: message.message,
         isOwnMessage: message.user_id === user.id,
@@ -68,6 +70,7 @@ const Chat = ({
         isOwnMessage: msg.newMessage.user_id === user.id,
         createdAt: msg.newMessage.createdAt,
         readed: msg.newMessage.readed,
+        userId: msg.newMessage.user_id,
       };
 
       setMessagesList((prevMessages) => [...prevMessages, newMessage]);
