@@ -35,7 +35,7 @@ import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
 
 const token = localStorage.getItem("token");
 
-const socket = io("https://socialmediaclone-production-1e63.up.railway.app/", {
+const socket = io("https://backtwclone-production.up.railway.app/", {
   auth: {
     token: `Bearer ${token}`,
   },
