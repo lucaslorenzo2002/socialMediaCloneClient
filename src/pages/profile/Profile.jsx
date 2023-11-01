@@ -113,6 +113,7 @@ const Profile = ({ socket }) => {
       <div className="relative rounded-full w-32 h-32">
         <img
           src={profileData?.profile_photo || "/defaultProfileImg.png"}
+          onError={(e) => (e.target.src = "/defaultProfileImg.png")}
           alt={`${profileData?.full_name}'s profile`}
           className="border-4 border-gray-300 rounded-full w-32 h-32 object-cover"
         />

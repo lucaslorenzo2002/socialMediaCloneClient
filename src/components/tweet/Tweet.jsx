@@ -63,7 +63,7 @@ const Tweet = ({
     }
     return false;
   }
-
+  console.log(profile);
   useEffect(() => {
     setIsRetweetedState(isUserARetweeter(retweets));
   }, [retweets]);
