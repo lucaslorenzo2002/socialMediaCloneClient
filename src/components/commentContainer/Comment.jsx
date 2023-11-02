@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import CONFIG from "../../constants/config";
 
 const Comment = ({ comment }) => {
-  const token = useSelector((state) => state.user.token);
+  const token = useSelector((state) => state.token);
   const user = useSelector((state) => state.user);
   const isLikedByCurrentUser = comment.Likes?.some(
     (like) => like.user_id === user.id
@@ -67,7 +67,7 @@ const Comment = ({ comment }) => {
     <div className="p-4 border-b">
       <div className="flex space-x-3">
         <img
-          src={comment.User.profile_photo || "/defaultProfileImg.png"}
+          src={comment.User.profile_photo.includes("undefined") ? "/defaultProfileImg.png" : comment.User.profile_photo || "/defaultProfileImg.png"}
           alt="User"
           className="w-10 h-10 rounded-full"
         />

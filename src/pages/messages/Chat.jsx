@@ -21,12 +21,13 @@ const Chat = ({
   const [isTyping, setIsTyping] = useState(false);
   const connectedUsers = useSelector((state) => state.connectedUsers);
 
-  const [isOnline, setIsOnline] = useState(connectedUsers.some((user) => user.userId === user_id));
+  const [isOnline, setIsOnline] = useState(
+    connectedUsers.some((user) => user.userId === user_id)
+  );
 
   useEffect(() => {
     setIsOnline(connectedUsers.some((user) => user.userId === user_id));
   }, [connectedUsers]);
-
 
   const sendMessage = () => {
     // Manda mensaje al server
@@ -161,7 +162,11 @@ const Chat = ({
               </svg>
             </span>
             <img
-              src={profile_photo}
+              src={
+                profile_photo.includes("undefined")
+                  ? "/defaultProfileImg.png"
+                  : profile_photo
+              }
               onError={(e) => {
                 console.log(e);
                 e.target.src = "/defaultProfileImg.png";
@@ -186,7 +191,11 @@ const Chat = ({
             key={index}
             isOwnMessage={message.isOwnMessage}
             text={message.text}
-            profile_photo={profile_photo}
+            profile_photo={
+              profile_photo.includes("undefined")
+                ? "/defaultProfileImg.png"
+                : profile_photo
+            }
             user={username}
             createdAt={message.createdAt}
             readed={message.readed}
