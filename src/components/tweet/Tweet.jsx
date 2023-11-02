@@ -63,7 +63,6 @@ const Tweet = ({
     }
     return false;
   }
-  console.log(profile);
   useEffect(() => {
     setIsRetweetedState(isUserARetweeter(retweets));
   }, [retweets]);
@@ -177,7 +176,6 @@ const Tweet = ({
           }
         )
         .then((response) => {
-          console.log(response.data);
           setIsSaved(!isSaved);
           toast.success("Tweet guardado con éxito");
         })
@@ -198,7 +196,6 @@ const Tweet = ({
           }
         )
         .then((response) => {
-          console.log(response.data);
           setIsSaved(!isSaved);
           toast.success("Tweet eliminado de guardados con éxito");
         })

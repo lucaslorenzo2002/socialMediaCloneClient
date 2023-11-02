@@ -22,7 +22,7 @@ const Saved = () => {
           const posts = response.data.data[0].Posts;
           setSavedTweets(posts);
         } else {
-          console.log("No se pudo cargar los tweets guardados");
+          axios.error("No se pudo cargar los tweets guardados");
           setSavedTweets([]); // or handle this scenario accordingly
         }
       })
@@ -31,7 +31,6 @@ const Saved = () => {
       });
   }, [token]); // Add token as a dependency
 
-  console.log(savedTweets);
   return (
     <div className="min-h-screen">
       <h2 className="text-2xl font-bold my-5 text-center">Guardados</h2>

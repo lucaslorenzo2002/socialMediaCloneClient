@@ -136,7 +136,6 @@ const SocketProvider = ({ children, socket }) => {
 
   useEffect(() => {
     socket.on("users connected", (data) => {
-      console.log(data);
       dispatch(setConnectedUsers(data));
     });
   }, [dispatch, socket]);

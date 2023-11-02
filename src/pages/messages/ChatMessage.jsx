@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const ChatMessage = ({
   text,
-  profile_photo,
+  profile_photo = "/defaultProfileImg.png",
   user,
   isOwnMessage,
   createdAt,

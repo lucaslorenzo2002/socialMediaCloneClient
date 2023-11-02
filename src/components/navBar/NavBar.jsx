@@ -101,7 +101,6 @@ const NavBar = () => {
         },
       })
       .then((response) => {
-        console.log("Notifications:", response.data.data);
         setNotifications(response.data.data);
         dispatch(fetchSuccess(response.data.data));
       })

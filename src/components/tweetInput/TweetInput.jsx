@@ -61,7 +61,6 @@ const TweetInput = ({
       formData.append("file", fileState);
       formData.append("text", input);
 
-      console.log(formData);
 
       axios
         .post(`${CONFIG.BASE_URL}/crearpost`, formData, {

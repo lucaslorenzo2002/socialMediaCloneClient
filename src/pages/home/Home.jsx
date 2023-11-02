@@ -33,7 +33,6 @@ const Home = () => {
           const sortedArray = combinedArray.sort((a, b) => {
             let dateA = a.created_at;
             let dateB = b.created_at;
-            console.log(dateA, dateB);
             return new Date(dateA) - new Date(dateB);
           });
 

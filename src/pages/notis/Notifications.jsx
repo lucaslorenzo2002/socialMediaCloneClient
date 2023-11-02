@@ -38,7 +38,6 @@ const Notificatons = () => {
         },
       })
       .then((response) => {
-        console.log("Notifications:", response.data.data);
         setNotifications(response.data.data);
       })
       .catch((error) => {
@@ -57,7 +56,6 @@ const Notificatons = () => {
         }
       )
       .then((res) => {
-        console.log("Leyendo notis:", res.data.data);
         dispatch(fetchSuccess([]));
       })
       .catch((err) => {

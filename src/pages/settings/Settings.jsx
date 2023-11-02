@@ -79,7 +79,6 @@ const EditProfile = () => {
       if (response.data.success) {
         toast.success("Usuario actualizado");
         setIsLoading(false);
-        console.log(response.data);
 
         dispatch(setUser(response.data.newUser || user));
       }

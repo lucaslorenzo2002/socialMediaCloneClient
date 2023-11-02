@@ -14,7 +14,6 @@ const ForgotPassword = () => {
     axios
       .post(`${CONFIG.BASE_URL}/resetpasswordrequest`, formData)
       .then((res) => {
-        console.log(res);
         setIsLoading(false);
         if (res.data.success) {
           toast.success(res.data.message);

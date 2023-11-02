@@ -32,7 +32,6 @@ const TweetGuardado = ({
           }
         )
         .then((response) => {
-          console.log(response.data);
           setIsSaved(!isSaved);
           toast.success("Tweet guardado con éxito");
         })

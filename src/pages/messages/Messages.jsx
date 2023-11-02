@@ -32,7 +32,6 @@ const Messages = ({ socket }) => {
             readed: false,
           },
         }));
-        console.log(newChatList);
         setChats(newChatList);
       })
       .catch((error) => {
