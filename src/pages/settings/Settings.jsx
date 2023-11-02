@@ -115,6 +115,7 @@ const EditProfile = () => {
             "/defaultProfileImg.png"
           }
           onError={(e) => {
+            console.log(e);
             e.target.src = "/defaultProfileImg.png";
           }}
           alt={`${profileData?.full_name}'s profile`}

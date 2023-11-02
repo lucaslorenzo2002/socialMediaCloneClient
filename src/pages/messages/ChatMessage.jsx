@@ -40,6 +40,7 @@ const ChatMessage = ({
           <img
             src={globalUser.profile_photo}
             onError={(e) => {
+              console.log(e);
               e.target.src = "/defaultProfileImg.png";
             }}
             alt="My profile"
@@ -65,6 +66,7 @@ const ChatMessage = ({
           <img
             src={profile_photo}
             onError={(e) => {
+              console.log(e);
               e.target.src = "/defaultProfileImg.png";
             }}
             alt={user}

@@ -76,6 +76,7 @@ const Explore = () => {
                 <img
                   src={user.img || "/defaultProfileImg.png"}
                   onError={(e) => {
+                    console.log(e);
                     e.target.src = "/defaultProfileImg.png";
                   }}
                   alt={user.display}

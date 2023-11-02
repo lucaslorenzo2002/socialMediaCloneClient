@@ -165,6 +165,7 @@ const Chat = ({
             <img
               src={profile_photo}
               onError={(e) => {
+                console.log(e);
                 e.target.src = "/defaultProfileImg.png";
               }}
               alt={username}

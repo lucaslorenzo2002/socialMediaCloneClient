@@ -71,6 +71,7 @@ const TweetGuardado = ({
         <img
           src="/defaultProfileImg.png"
           onError={(e) => {
+            console.log(e);
             e.target.src = "/defaultProfileImg.png";
           }}
           alt="User"

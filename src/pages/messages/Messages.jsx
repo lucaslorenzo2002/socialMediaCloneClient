@@ -89,6 +89,7 @@ const Messages = ({ socket }) => {
                 src={chat.profile_photo || "/defaultProfileImg.png"}
                 alt={chat.full_name}
                 onError={(e) => {
+                  console.log(e);
                   e.target.src = "/defaultProfileImg.png";
                 }}
                 className="w-10 aspect-square object-cover rounded-full mr-3"

@@ -31,6 +31,7 @@ const SidebarLeft = () => {
             user.profile_photo ? user.profile_photo : "/defaultProfileImg.png"
           }
           onError={(e) => {
+            console.log(e);
             e.target.src = "/defaultProfileImg.png";
           }}
           alt="Profile Pic"
