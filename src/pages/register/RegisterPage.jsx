@@ -15,6 +15,9 @@ const RegisterPage = () => {
   });
 
   const handleChange = (e) => {
+    if(formData.password.length < 8) {
+      axios.error("La contraseña debe tener al menos 6 caracteres");
+    }
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
